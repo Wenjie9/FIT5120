@@ -653,6 +653,7 @@ namespace WPDataAccess\List_Table {
 							 false === get_user_option( self::HIDDENCOLUMNS_PREFIX . get_current_screen()->id . $table_name )
 						) {
 							$hidden = array(
+								'pub_table_name',
 								'pub_column_names',
 								'pub_sort_icons',
 								'pub_styles',
@@ -677,6 +678,11 @@ namespace WPDataAccess\List_Table {
 								'pub_table_options_nl2br',
 								'pub_show_advanced_settings',
 								'pub_extentions',
+								'pub_query',
+								'pub_cpt',
+								'pub_cpt_fields',
+								'pub_cpt_query',
+								'pub_cpt_format',
 							);
 
 							update_user_meta(

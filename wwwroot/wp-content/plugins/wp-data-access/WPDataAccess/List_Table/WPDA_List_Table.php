@@ -303,6 +303,12 @@ class WPDA_List_Table extends Wordpress_Original\WP_List_Table
      */
     protected  $pid = null ;
     /**
+     * Cache columns
+     *
+     * @var null
+     */
+    protected  $wpda_cached_columns = null ;
+    /**
      * WPDA_List_Table constructor
      *
      * A table name must be provided in the constructor call. The table must be a valid MySQL database table to
@@ -2454,6 +2460,9 @@ EOT;
      */
     public function get_columns()
     {
+        if ( null !== $this->wpda_cached_columns && is_array( $this->wpda_cached_columns ) ) {
+            return $this->wpda_cached_columns;
+        }
         $columns = array();
         if ( $this->bulk_actions_enabled ) {
             
@@ -2519,6 +2528,8 @@ EOT;
             }
         }
         
+        // Cache columns.
+        $this->wpda_cached_columns = $columns;
         return $columns;
     }
     

@@ -33,6 +33,21 @@ class WPDA_Publisher_List_Table extends WPDA_List_Table
         WPDA_Data_Tables::enqueue_styles_and_script();
     }
     
+    public function get_columns()
+    {
+        if ( is_array( $this->wpda_cached_columns ) ) {
+            return $this->wpda_cached_columns;
+        }
+        $columns = parent::get_columns();
+        // Remove data source column.
+        unset( $columns['pub_data_source'] );
+        // Add data source column after schema name.
+        $columns = WPDA::array_insert_after( $columns, 'pub_schema_name', array(
+            'pub_data_source' => __( 'Data Source', 'wp-data-access' ),
+        ) );
+        return $columns;
+    }
+    
     /**
      * Overwrite method column_default
      *
@@ -51,12 +66,28 @@ class WPDA_Publisher_List_Table extends WPDA_List_Table
         
         
         if ( 'pub_schema_name' === $column_name ) {
+            if ( 'CPT' === $item['pub_data_source'] ) {
+                return '';
+            }
             global  $wpdb ;
             if ( $wpdb->dbname === $item[$column_name] ) {
                 return "WordPress database ({$item[$column_name]})";
             }
         }
         
+        if ( 'pub_data_source' === $column_name ) {
+            switch ( $item[$column_name] ) {
+                case 'Query':
+                    // Show SQL query.
+                    return $this->render_column_content( $item, 'pub_query' );
+                case 'CPT':
+                    // Show CPT query.
+                    return $this->render_column_content( $item, 'pub_cpt' ) . ' (custom post type)';
+                default:
+                    // Show database table.
+                    return $this->render_column_content( $item, 'pub_table_name' );
+            }
+        }
         if ( 'pub_table_name' === $column_name ) {
             if ( 'Query' === $item['pub_data_source'] ) {
                 return '';
@@ -357,6 +388,10 @@ EOT;
             'pub_responsive_modal_hyperlinks' => __( 'Modal Hyperlinks', 'wp-data-access' ),
             'pub_responsive_icon'             => __( 'Responsive Icon?', 'wp-data-access' ),
             'pub_extentions'                  => __( 'Publication Extentions', 'wp-data-access' ),
+            'pub_cpt'                         => __( 'Custom post type', 'wp-data-access' ),
+            'pub_cpt_fields'                  => __( 'Custom fields', 'wp-data-access' ),
+            'pub_cpt_query'                   => __( 'CPT query', 'wp-data-access' ),
+            'pub_cpt_format'                  => __( 'Field labels', 'wp-data-access' ),
         );
     }
     

@@ -545,8 +545,10 @@ namespace WPDataAccess\CSV_Files {
 				wp_die( __( 'ERROR: Not authorized', 'wp-data-access' ) ); // phpcs:ignore WordPress.Security.EscapeOutput
 			}
 
+			// phpcs:disable
 			$temp_file_name = isset( $_FILES['filename']['tmp_name'] ) ?
-				sanitize_text_field( wp_unslash( $_FILES['filename']['tmp_name'] ) ) : '';
+				sanitize_text_field( $_FILES['filename']['tmp_name'] ) : ''; // For Windows: do NOT unslash!
+			// phpcs:enable
 			$orig_file_name = isset( $_FILES['filename']['name'] ) ?
 				sanitize_text_field( wp_unslash( $_FILES['filename']['name'] ) ) : '';
 

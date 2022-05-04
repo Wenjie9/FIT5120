@@ -271,7 +271,7 @@ namespace WPDataProjects\Project {
 				?>
 
 				jQuery(function () {
-					jQuery("#page_schema_name option[value=<?php echo esc_attr( $wpdb->dbname ); ?>]").text("WordPress database (<?php echo esc_attr( $wpdb->dbname ); ?>)");
+					jQuery("#page_schema_name option[value='<?php echo esc_attr( $wpdb->dbname ); ?>']").text("WordPress database (<?php echo esc_attr( $wpdb->dbname ); ?>)");
 					jQuery('#page_allow_full_export').parent().parent().find('.icon').empty().append('<span title="Adds CSV and JSON full table export buttons to list tables\n\nWorks on back-end pages only" class="material-icons pointer wpda_tooltip">help</span>');
 					jQuery('[name="page_schema_name"]').on('change', function () {
 						jQuery('[name="page_table_name"]').empty();

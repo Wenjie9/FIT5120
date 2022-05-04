@@ -1,5 +1,33 @@
 ### ChangeLog for WP Data Access
 
+#### 5.1.7 / 2022-04-21
+
+Changed: Center geo marker when user clicks on it (Jonathan)
+Added: Options "wpda_searchbox": "none" and "wpda_searchbox": "footer" (Charles)
+Added: Search clear icon to publication search boxes
+Fixed: URL parameter not working with "No search condition = show no rows" (Charles)
+Fixed: Visual Query Builder not working with remote databases (Hank)
+Fixed: Data Publisher showing unavailable columns in order by drop down list (tonysac123)
+Fixed: Query Builder not parsing like '%%ac%' correctly (Marvin)
+
+#### 5.1.6 / 2022-04-07
+
+Patched: File upload not working on Windows
+
+Added: Advanced chart options (Iek)
+Added: CPT query support to Data Publisher
+Updated: External libraries
+Fixed: Insert fails on child of n:m relationship in remote database (Hank)
+Fixed: NL language typo
+Fixed: Add New button shown on registration page (Philip)
+Fixed: Add data type to Search Builder (Perry)
+Fixed: Limit does not work for custom queries in Query Builder (Steve)
+Fixed: Bad jQuery solector (@luk4)
+Fixed: Publication order by issue
+Fixed: Publication extensions column too small
+Fixed: Several publication styling issues
+Fixed: Error when opening view settings in Data Explorer
+
 #### 5.1.5 / 2022-03-25
 
 Added: Create publication from custom query

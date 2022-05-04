@@ -1,11 +1,14 @@
 CREATE TABLE {wp_prefix}wpda_publisher{wpda_postfix} (
   pub_id                          mediumint(9)          NOT NULL AUTO_INCREMENT,
   pub_name                        varchar(100)          NOT NULL,
+  pub_data_source                 enum('Table','Query', 'CPT')    DEFAULT 'Table',
   pub_schema_name                 varchar(64)           NOT NULL  DEFAULT '',
-  pub_data_source                 enum('Table','Query', 'CPT') 
-                                                                  DEFAULT 'Table',
   pub_table_name                  varchar(64)           NOT NULL,
   pub_column_names                varchar(4096)                   DEFAULT '*',
+  pub_cpt                         varchar(20),
+  pub_cpt_fields                  text,
+  pub_cpt_query                   text,
+  pub_cpt_format                  text,
   pub_format                      text,
   pub_query                       text,
   pub_sort_icons                  enum('default','plugin','none'),
@@ -31,7 +34,7 @@ CREATE TABLE {wp_prefix}wpda_publisher{wpda_postfix} (
   pub_table_options_serverside    char(3)                         DEFAULT 'on',
   pub_table_options_nl2br         char(3)                         DEFAULT NULL,
   pub_table_options_advanced      text,
-  pub_extentions                  varchar(255)                    DEFAULT '',
+  pub_extentions                  varchar(2000)                   DEFAULT '',
   PRIMARY KEY (pub_id),
   UNIQUE KEY (pub_name)
 );

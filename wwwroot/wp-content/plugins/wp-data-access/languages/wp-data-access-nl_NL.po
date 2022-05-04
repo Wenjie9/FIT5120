@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Data Access\n"
 "POT-Creation-Date: 2022-01-16 00:57+0100\n"
-"PO-Revision-Date: 2022-01-16 01:18+0100\n"
+"PO-Revision-Date: 2022-04-05 16:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -4537,7 +4537,7 @@ msgstr "Gegevenstype"
 
 #: WPDataProjects/Project/WPDP_Project_Table_Form.php:1240
 msgid "List label (uncheck to hide column)"
-msgstr "Lijst Label (vinkje om kolom te verbergen)"
+msgstr "Lijstlabel (schakel het selectievakje uit om de kolom te verbergen)"
 
 #: WPDataProjects/Project/WPDP_Project_Table_Form.php:1244
 #: WPDataProjects/Project/WPDP_Project_Table_Form.php:1466
@@ -4558,7 +4558,7 @@ msgstr "Minder?"
 
 #: WPDataProjects/Project/WPDP_Project_Table_Form.php:1458
 msgid "Form label (uncheck to hide column)"
-msgstr "Formulier label (vinkje om kolom te verbergen)"
+msgstr "Formulierlabel (schakel het selectievakje uit om de kolom te verbergen)"
 
 #: WPDataProjects/Project/WPDP_Project_Table_Form.php:1470
 msgid "ID?"

@@ -722,9 +722,6 @@ div.wpda_sb > div {
     line-height: 2;
 }
 
-#pub_default_orderby {
-    display: none;
-}
 div.wpda_dp_orderby {
     display: grid;
     grid-template-columns: 3fr 1fr 24px;
@@ -736,11 +733,25 @@ div.wpda_dp_orderby i {
     font-size: 22px;
 }
 
-span.pub_premium {
-    line-height: 40px;
+.container_pds {
+    background: #fff;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    margin-right: 0;
 }
-span.pub_buttons {
-    float: right;
-    margin-top: 5px;
-    margin-bottom: 5px;
+.container_pds {
+    padding-bottom: 0;
+}
+.container_pds {
+    padding-left: 10px;
+}
+.container_pds label {
+    width: 100px;
+    display: inline-block;
+    font-weight: bold;
+}
+.container_pds div {
+    margin-bottom: 4px;
 }

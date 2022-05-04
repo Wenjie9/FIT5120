@@ -51,7 +51,7 @@ namespace WPDataAccess {
 		/**
 		 * Option wpda_version and it's default value
 		 */
-		const OPTION_WPDA_VERSION = [ 'wpda_version', '5.1.5' ];
+		const OPTION_WPDA_VERSION = [ 'wpda_version', '5.1.7' ];
 		/**
 		 * Option wpda_setup_error and it's default value
 		 */
@@ -639,9 +639,11 @@ namespace WPDataAccess {
 		 *
 		 */
 		public static function get_type( $arg ) {
-
-			switch ( trim( str_replace( 'unsigned', '', $arg ) ) ) {
-
+			$type = trim( str_replace( 'unsigned', '', $arg ) );
+			if ( false !== ( $index = strpos( $type, '(' ) ) ) {
+				$type = substr( $type, 0, $index );
+			}
+			switch ( $type ) {
 				case 'tinyint':
 				case 'smallint':
 				case 'mediumint':
@@ -652,26 +654,64 @@ namespace WPDataAccess {
 				case 'decimal':
 				case 'year':
 					return 'number';
-
 				case 'date':
 				case 'datetime':
 				case 'timestamp':
 					return 'date';
-
 				case 'time':
 					return 'time';
-
 				case 'enum':
 					return 'enum';
-
 				case 'set':
 					return 'set';
-
 				default:
 					return 'string';
-
 			}
+		}
 
+		public static function get_sb_type( $arg ) {
+			$type = trim( str_replace( 'unsigned', '', $arg ) );
+			if ( false !== ( $index = strpos( $type, '(' ) ) ) {
+				$type = substr( $type, 0, $index );
+			}
+			switch ( $type ) {
+				case 'tinyint':
+				case 'smallint':
+				case 'mediumint':
+				case 'int':
+				case 'bigint':
+				case 'float':
+				case 'double':
+				case 'decimal':
+				case 'year':
+					return 'num';
+				case 'date':
+				case 'datetime':
+				case 'timestamp':
+					return 'date';
+				default:
+					return 'string';
+			}
+		}
+
+		/**
+		 * Insert a value or key/value pair after a specific key in an array.  If key doesn't exist, value is appended
+		 * to the end of the array.
+		 *
+		 * Source: https://gist.github.com/wpscholar/0deadce1bbfa4adb4e4c
+		 *
+		 * @param array $array
+		 * @param string $key
+		 * @param array $new
+		 *
+		 * @return array
+		 */
+		public static function array_insert_after( $array, $key, $new ) {
+			$keys = array_keys( $array );
+			$index = array_search( $key, $keys );
+			$pos = false === $index ? count( $array ) : $index + 1;
+
+			return array_merge( array_slice( $array, 0, $pos ), $new, array_slice( $array, $pos ) );
 		}
 
 		/**
@@ -867,6 +907,9 @@ namespace WPDataAccess {
 			$where_search_args = self::add_wpda_search_args( $columns );
 
 			if ( has_filter('wpda_construct_where_clause') ) {
+				global $wpda_search_args;
+				$wpda_search_args = $where_search_args;
+
 				// Use search filter
 				$filter = apply_filters(
 					'wpda_construct_where_clause',
@@ -1083,6 +1126,26 @@ namespace WPDataAccess {
 			return false;
 		}
 
+		/**
+		 * Get all available post types.
+		 *
+		 * @return array
+		 */
+		public static function get_post_types() {
+			global $wpdb;
+			$rows = $wpdb->get_results(
+				"select distinct post_type from {$wpdb->posts}",
+				'ARRAY_N'
+			);
+
+			$cpts = [];
+			foreach ( $rows as $row ) {
+				$cpts[] = $row[0];
+			}
+
+			return $cpts;
+		}
+
 		public static function get_table_engine( $schema_name, $table_name ) {
 			$table_info = WPDA::get_table_values( $schema_name, $table_name );
 			return (
@@ -1136,6 +1199,7 @@ namespace WPDataAccess {
 				if ( isset( $wpda_table_settings->table_settings->row_count_estimate ) ) {
 					$system_row_count_estimate = $wpda_table_settings->table_settings->row_count_estimate;
 				}
+
 				if ( isset( $wpda_table_settings->table_settings->row_count_estimate_value ) ) {
 					$row_count_estimate_value = $wpda_table_settings->table_settings->row_count_estimate_value;
 				}
@@ -1405,6 +1469,15 @@ namespace WPDataAccess {
 			header( 'Cache-Control: post-check=0, pre-check=0', false );
 			header( 'Pragma: no-cache' );
 			header( 'Expires: 0' );
+		}
+
+		public static function sent_msg( $status, $msg ) {
+			echo json_encode(
+				array(
+					'status' => $status,
+					'msg'    => $msg,
+				)
+			); // phpcs:ignore
 		}
 
 		public static function is_post() {

@@ -1521,9 +1521,10 @@ Variable $$column_name$$ will be replaced with the value of column $$column_name
 		 * Provides content for Export action
 		 */
 		protected function tab_export() {
-			$wp_nonce_action   = 'wpda-export-' . json_encode( $this->table_name );
-			$wp_nonce          = wp_create_nonce( $wp_nonce_action );
-			$sql_option_prefix = '';
+			$wp_nonce_action               = 'wpda-export-' . json_encode( $this->table_name );
+			$wp_nonce                      = wp_create_nonce( $wp_nonce_action );
+			$sql_option_prefix             = '';
+			$export_variable_prefix_option = false;
 
 			if ( 'Table' === $this->dbo_type ) {
 				$export_variable_prefix_option = ( 'on' === WPDA::get_option( WPDA::OPTION_BE_EXPORT_VARIABLE_PREFIX ) );

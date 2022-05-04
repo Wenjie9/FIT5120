@@ -267,7 +267,7 @@ namespace WPDataProjects\Parent_Child {
 				// Record successfully inserted: reload page to show tabs
 				?>
 				<script>
-					jQuery("#wpda_simple_form_0 input[name=wpda_message]").val("<?php echo __( 'Succesfully saved changes to database', 'wp-data-access' ); ?>");
+					jQuery("#wpda_simple_form_0 input[name='wpda_message']").val("<?php echo __( 'Succesfully saved changes to database', 'wp-data-access' ); ?>");
 					jQuery("#wpda_simple_form_0").submit();
 				</script>
 				<?php

@@ -1,0 +1,893 @@
+# Translation of Plugins - Cost Calculator Builder - Stable (latest release) in Chinese (China)
+# This file is distributed under the same license as the Plugins - Cost Calculator Builder - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2021-05-09 08:53:18+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/3.0.0-rc.4\n"
+"Language: zh_CN\n"
+"Project-Id-Version: Plugins - Cost Calculator Builder - Stable (latest release)\n"
+
+#: includes/classes/CCBCalculators.php:259
+msgid "Couldn't delete calculator, please try again!"
+msgstr "无法删除计算项目，请重试！"
+
+#: templates/admin/settings/woo-products.php:14
+msgid "Enable Calculator for WooCommerce Products"
+msgstr "为WooCommerce产品启用计算器"
+
+#: templates/admin/settings/woo-products.php:22
+msgid "All Categories"
+msgstr "所有分类"
+
+#: templates/admin/settings/woo-products.php:31
+msgid "- Select Hook For Showing Calculator -"
+msgstr "- 选择钩子用于显示计算项目 -"
+
+#: templates/admin/settings/woo-products.php:40
+msgid "Hide WooCommerce Add To Cart Form"
+msgstr "隐藏 WooCommerce 的添加到购物车表单"
+
+#: templates/admin/settings/woo-products.php:48
+msgid "Disable Checkout From Calculator"
+msgstr "禁用计算器中的结账功能"
+
+#: templates/admin/settings/woo-products.php:52
+msgid "Link WooCommerce Meta to Calculator Fields:"
+msgstr "链接 WooCommerce 元到计算字段。"
+
+#: templates/admin/settings/woo-products.php:56
+msgid "WooCommerce Meta"
+msgstr "WooCommerce 元"
+
+#: templates/admin/settings/woo-products.php:58
+msgid "Calculator Field"
+msgstr "计算字段"
+
+#: templates/admin/settings/woo-products.php:66
+msgid "Add New Link"
+msgstr "添加新链接"
+
+#: templates/admin/settings/woo-checkout.php:14
+msgid "Enable WooCommerce Checkout"
+msgstr "启用 WooCommerce 结账"
+
+#: includes/classes/CCBSettingsData.php:138
+msgid "Woo Products"
+msgstr "Woo 产品"
+
+#: includes/classes/CCBSettingsData.php:145
+msgid "Woo Checkout"
+msgstr "Woo 结账"
+
+#: templates/admin/partials/demo-import.php:57
+msgid "Import From File"
+msgstr "从文件导入"
+
+#: templates/admin/calculator.php:12 templates/admin/orders.php:122
+#: templates/admin/partials/existing.php:78
+msgid "Apply"
+msgstr "应用"
+
+#: templates/admin/partials/demo-import.php:6
+msgid "Go back"
+msgstr "返回"
+
+#: includes/classes/CCBCalculators.php:31
+#: includes/classes/CCBCalculators.php:109
+#: includes/classes/CCBCalculators.php:199
+#: includes/classes/CCBCalculators.php:253
+#: includes/classes/CCBCalculators.php:303
+#: includes/classes/CCBCalculators.php:336
+#: includes/classes/CCBCalculators.php:362
+#: includes/classes/CCBExportImport.php:14
+#: includes/classes/CCBExportImport.php:43
+#: includes/classes/CCBExportImport.php:59
+msgid "You are not allowed to run this action"
+msgstr "您无法运行此操作"
+
+#: templates/admin/go-pro.php:37
+msgid "Developer Oriented"
+msgstr "面向开发者"
+
+#: templates/admin/go-pro.php:100
+msgid "Cost Calculator Plugin for WordPress"
+msgstr "WordPress 成本计算插件"
+
+#: templates/admin/go-pro.php:109
+msgid "Learn more."
+msgstr "了解更多。"
+
+#: templates/admin/go-pro.php:116
+msgid "Pricing"
+msgstr "价格"
+
+#: templates/admin/go-pro.php:118
+msgid "Annual"
+msgstr "每年"
+
+#: templates/admin/go-pro.php:123 templates/admin/go-pro.php:158
+msgid "Lifetime"
+msgstr "期限"
+
+#: templates/admin/go-pro.php:139
+msgid "per year"
+msgstr "每年"
+
+#: templates/admin/go-pro.php:147
+msgid "Get now"
+msgstr "现在开始"
+
+#: templates/admin/go-pro.php:158
+msgid "1 year"
+msgstr "1年"
+
+#: templates/admin/go-pro.php:159
+msgid "You get <a href=\"%1$s\"><span %2$s>1 year</span> updates and support</a> from the date of purchase. We offer 30 days Money Back Guarantee based on <a href=\"%1$s\">Refund Policy</a>."
+msgstr "自购买之日起，您将获得<a href=\"%1$s\"><span %2$s>1年</span>更新和支持</a>。我们根据<a href=\"%1$s\">退款政策</a>提供30天退款保证。"
+
+#: templates/admin/go-pro.php:167
+msgid "Version:"
+msgstr "版本："
+
+#: templates/admin/go-pro.php:172
+msgid "View Changelog"
+msgstr "查看更新日志"
+
+#: templates/admin/go-pro.php:178
+msgid "Last Update:"
+msgstr "上次更新："
+
+#: templates/admin/go-pro.php:186
+msgid "Wordpress Version:"
+msgstr "Wordpress版本："
+
+#: templates/admin/go-pro.php:194
+msgid "Tested up to:"
+msgstr "经测试："
+
+#: includes/classes/CCBBuilderAdminMenu.php:38
+#: includes/classes/CCBBuilderAdminMenu.php:39
+msgid "Upgrade"
+msgstr "升级"
+
+#: templates/admin/go-pro.php:25
+msgid "Single Site"
+msgstr "单站点"
+
+#: templates/admin/go-pro.php:31
+msgid "Up to 5 Sites"
+msgstr "最多5个站点"
+
+#: templates/admin/go-pro.php:32
+msgid "Most Popular"
+msgstr "最热门"
+
+#: templates/admin/go-pro.php:36
+msgid "Up to 25 Sites"
+msgstr "最多25个站点"
+
+#: templates/admin/fields/checkbox-field.php:54
+#: templates/admin/fields/date-picker-field.php:44
+#: templates/admin/fields/drop-down-field.php:65
+#: templates/admin/fields/drop-down-with-image-field.php:68
+#: templates/admin/fields/file-upload-field.php:86
+#: templates/admin/fields/quantity-field.php:103
+#: templates/admin/fields/radio-button-field.php:64
+#: templates/admin/fields/toggle-field.php:55
+msgid "Required"
+msgstr "必需"
+
+#: templates/admin/settings/notice.php:11
+msgid "- Required field notice -"
+msgstr "- 必填字段通知 -"
+
+#: includes/classes/CCBSettingsData.php:180
+msgid "Notice"
+msgstr "通知"
+
+#: templates/admin/settings/recaptcha.php:23
+msgid "- Google reCAPTCHA v2 -"
+msgstr "- Google reCAPTCHA v2 -"
+
+#: templates/admin/fields/checkbox-field.php:32
+#: templates/admin/fields/drop-down-field.php:43
+#: templates/admin/fields/drop-down-with-image-field.php:46
+#: templates/admin/fields/file-upload-field.php:75
+#: templates/admin/fields/multi-range-field.php:103
+#: templates/admin/fields/quantity-field.php:70
+#: templates/admin/fields/radio-button-field.php:42
+#: templates/admin/fields/range-button-field.php:91
+#: templates/admin/fields/toggle-field.php:33
+msgid "Currency Symbol On Total Description"
+msgstr "总说明上的货币符号"
+
+#: templates/admin/fields/checkbox-field.php:43
+#: templates/admin/fields/drop-down-field.php:54
+#: templates/admin/fields/drop-down-with-image-field.php:57
+#: templates/admin/fields/multi-range-field.php:114
+#: templates/admin/fields/quantity-field.php:92
+#: templates/admin/fields/radio-button-field.php:53
+#: templates/admin/fields/range-button-field.php:102
+#: templates/admin/fields/toggle-field.php:44
+msgid "Round Value"
+msgstr "圆值"
+
+#: templates/admin/partials/existing.php:10
+msgid "Import calculators"
+msgstr "导入计算项目"
+
+#: templates/frontend/fields/cost-drop-down.php:16
+msgid "- Select value -"
+msgstr "-选择值-"
+
+#: templates/admin/settings/default-form.php:14
+#: templates/admin/settings/send-form.php:14
+msgid "Enable Contact Form"
+msgstr "启用联系表单"
+
+#: templates/admin/settings/default-form.php:22
+#: templates/admin/settings/send-form.php:22
+msgid "Default"
+msgstr "默认"
+
+#: templates/admin/settings/default-form.php:32
+#: templates/admin/settings/send-form.php:32
+msgid "- Type Email -"
+msgstr "-键入电子邮箱地址-"
+
+#: templates/admin/settings/default-form.php:39
+#: templates/admin/settings/send-form.php:39
+msgid "- Type Subject -"
+msgstr "-键入主题-"
+
+#: templates/admin/settings/default-form.php:50
+#: templates/admin/settings/send-form.php:50
+msgid "will be changed into total"
+msgstr "将更改为总计"
+
+#: templates/admin/settings/default-form.php:59
+#: templates/admin/settings/send-form.php:59
+msgid "- Type Button Text -"
+msgstr "-键入按钮文本-"
+
+#: templates/admin/settings/default-form.php:67
+#: templates/admin/settings/send-form.php:67
+msgid "Redirect to payment after submit"
+msgstr "提交后重定向到付款"
+
+#: templates/admin/settings/default-form.php:75
+#: templates/admin/settings/send-form.php:75
+msgid "Default2"
+msgstr "默认值2"
+
+#: templates/admin/settings/default-form.php:77
+#: templates/admin/settings/send-form.php:77
+msgid "Only Enabled Payment Methods will be available here. You can enable and setup Payments via Settings main menu."
+msgstr "这里只提供已启用的付款方式。您可以通过设置主菜单启用和设置付款方式。"
+
+#: templates/admin/settings/recaptcha.php:14
+msgid "Enable reCAPTCHA"
+msgstr "启用reCAPTCHA"
+
+#: templates/admin/settings/recaptcha.php:31
+msgid "- Paste reCAPTCHA Site Key -"
+msgstr "-粘贴reCAPTCHA站点密钥-"
+
+#: templates/admin/settings/recaptcha.php:38
+msgid "- Paste reCAPTCHA Secret Key -"
+msgstr "-粘贴reCAPTCHA密钥-"
+
+#: templates/admin/settings/woo-checkout.php:22
+msgid "- Select WooCommerce Product -"
+msgstr "- 选择WooCommerce产品 -"
+
+#: templates/admin/settings/woo-checkout.php:27
+msgid "Redirect after Submits"
+msgstr "提交后重定向"
+
+#: templates/admin/settings/woo-checkout.php:31
+msgid "to Cart page"
+msgstr "转到购物车页面"
+
+#: templates/admin/settings/woo-checkout.php:36
+msgid "to Checkout page"
+msgstr "转到结算页"
+
+#: templates/admin/settings/stripe.php:14
+msgid "Enable Stripe"
+msgstr "启用Stripe"
+
+#: templates/admin/settings/stripe.php:21
+msgid "- Stripe Public Key -"
+msgstr "- Stripe公钥 -"
+
+#: templates/admin/settings/stripe.php:28
+msgid "- Stripe Secret Key -"
+msgstr "- Stripe密钥-"
+
+#: templates/admin/settings/paypal.php:14
+msgid "Enable PayPal"
+msgstr "启用 PayPal"
+
+#: templates/admin/settings/paypal.php:21
+msgid "- PayPal Email -"
+msgstr "- PayPal 电子邮箱地址 -"
+
+#: templates/admin/settings/paypal.php:29
+msgid "- Select Currency Symbol -"
+msgstr "-选择货币符号-"
+
+#: templates/admin/settings/paypal.php:38
+msgid "- Select type of .... -"
+msgstr "-选择类型-"
+
+#: templates/admin/partials/pro-feature.php:5
+msgid "This feature is part of Premium Add-on"
+msgstr "此功能是高级扩展的一部分"
+
+#: templates/admin/partials/pro-feature.php:6
+msgid "Buy now"
+msgstr "立即购买"
+
+#: templates/admin/partials/existing.php:4
+#: templates/admin/partials/header.php:25
+msgid "My Calculators"
+msgstr "我的计算"
+
+#: templates/admin/partials/header.php:31
+msgid "Create new"
+msgstr "新建"
+
+#: templates/admin/partials/footer.php:5
+msgid "SAVE"
+msgstr "保存"
+
+#: templates/admin/partials/footer.php:11
+msgid "PREVIEW"
+msgstr "预览"
+
+#: templates/admin/partials/footer.php:18
+msgid "Shortcode"
+msgstr "简码"
+
+#: templates/admin/partials/footer.php:19
+msgid "Click to copy"
+msgstr "单击以复制"
+
+#: templates/admin/fields/checkbox-field.php:8
+#: templates/admin/fields/date-picker-field.php:12
+#: templates/admin/fields/drop-down-field.php:9
+#: templates/admin/fields/drop-down-with-image-field.php:12
+#: templates/admin/fields/file-upload-field.php:12
+#: templates/admin/fields/multi-range-field.php:12
+#: templates/admin/fields/quantity-field.php:8
+#: templates/admin/fields/radio-button-field.php:9
+#: templates/admin/fields/range-button-field.php:6
+#: templates/admin/fields/text-area-field.php:6
+#: templates/admin/fields/toggle-field.php:8
+#: templates/admin/fields/total-field.php:6
+msgid "- Field Label -"
+msgstr "-字段标签-"
+
+#: templates/admin/fields/checkbox-field.php:14
+#: templates/admin/fields/date-picker-field.php:18
+#: templates/admin/fields/drop-down-field.php:15
+#: templates/admin/fields/drop-down-with-image-field.php:18
+#: templates/admin/fields/file-upload-field.php:18
+#: templates/admin/fields/multi-range-field.php:18
+#: templates/admin/fields/quantity-field.php:14
+#: templates/admin/fields/radio-button-field.php:15
+#: templates/admin/fields/range-button-field.php:12
+#: templates/admin/fields/text-area-field.php:18
+#: templates/admin/fields/toggle-field.php:14
+msgid "- Field Description -"
+msgstr "-字段标签-"
+
+#: templates/admin/fields/html-field.php:4
+msgid "HTML5 Code"
+msgstr "HTML5代码"
+
+#: templates/admin/fields/line-field.php:7
+msgid "- Select Size -"
+msgstr "-选择尺寸-"
+
+#: templates/admin/fields/line-field.php:8
+msgid "small"
+msgstr "小"
+
+#: templates/admin/fields/line-field.php:9
+#: templates/admin/fields/line-field.php:30
+msgid "medium"
+msgstr "中"
+
+#: templates/admin/fields/line-field.php:10
+msgid "large"
+msgstr "大"
+
+#: templates/admin/fields/line-field.php:18
+msgid "- Select Style -"
+msgstr "- 选择样式 -"
+
+#: templates/admin/fields/line-field.php:19
+msgid "solid"
+msgstr "实线"
+
+#: templates/admin/fields/line-field.php:20
+msgid "dashed"
+msgstr "虚线"
+
+#: templates/admin/fields/line-field.php:28
+msgid "- Select length -"
+msgstr "-选择长度-"
+
+#: templates/admin/fields/line-field.php:29
+msgid "short"
+msgstr "短"
+
+#: templates/admin/fields/line-field.php:31
+msgid "long"
+msgstr "长"
+
+#: templates/admin/fields/date-picker-field.php:33
+#: templates/admin/fields/quantity-field.php:39
+#: templates/admin/fields/text-area-field.php:12
+msgid "- Field Placeholder -"
+msgstr "-字段占位符-"
+
+#: templates/admin/fields/date-picker-field.php:75
+msgid "With range"
+msgstr "有范围"
+
+#: templates/admin/fields/date-picker-field.php:76
+msgid "No range"
+msgstr "无范围"
+
+#: templates/admin/fields/total-field.php:12
+msgid "Calculator Formula"
+msgstr "算器公式"
+
+#: templates/admin/fields/total-field.php:19
+msgid "Available Operators"
+msgstr "可用运算符"
+
+#: templates/admin/fields/total-field.php:39
+msgid "Available Fields"
+msgstr "可用字段"
+
+#: templates/admin/fields/total-field.php:48
+msgid "No Available fields yet!"
+msgstr "还没有可用字段！"
+
+#: templates/admin/fields/multi-range-field.php:34
+#: templates/admin/fields/range-button-field.php:27
+msgid "- Min Value -"
+msgstr "-最小值-"
+
+#: templates/admin/fields/multi-range-field.php:44
+#: templates/admin/fields/range-button-field.php:38
+msgid "- Max Value -"
+msgstr "-最大值-"
+
+#: templates/admin/fields/multi-range-field.php:54
+#: templates/admin/fields/quantity-field.php:29
+#: templates/admin/fields/range-button-field.php:49
+msgid "- Step -"
+msgstr "-步骤-"
+
+#: templates/admin/fields/multi-range-field.php:64
+msgid "- Default Left Value -"
+msgstr "-默认左值-"
+
+#: templates/admin/fields/multi-range-field.php:74
+msgid "- Default Right Value -"
+msgstr "-默认右值-"
+
+#: templates/admin/fields/multi-range-field.php:90
+#: templates/admin/fields/quantity-field.php:56
+#: templates/admin/fields/range-button-field.php:77
+msgid "- Unit -"
+msgstr "-单位-"
+
+#: templates/admin/fields/drop-down-field.php:30
+#: templates/admin/fields/drop-down-with-image-field.php:34
+#: templates/admin/fields/radio-button-field.php:30
+msgid "- Select A Default Value -"
+msgstr "-选择默认值-"
+
+#: templates/admin/fields/quantity-field.php:46
+#: templates/admin/fields/range-button-field.php:60
+msgid "- Default Value -"
+msgstr "-默认值-"
+
+#: templates/admin/main-settings.php:20
+msgid "Conditions"
+msgstr "条件"
+
+#: templates/admin/fields/multi-range-field.php:83
+#: templates/admin/fields/range-button-field.php:70
+msgid "- Sign -"
+msgstr "- 签名-"
+
+#: includes/classes/CCBSettingsData.php:119
+msgid "General"
+msgstr "常规"
+
+#: includes/classes/CCBSettingsData.php:125
+#: templates/admin/settings/paypal.php:26
+msgid "Currency"
+msgstr "货币"
+
+#: includes/classes/CCBSettingsData.php:131
+msgid "Send Form"
+msgstr "发送表单"
+
+#: includes/classes/CCBSettingsData.php:159
+msgid "PayPal"
+msgstr "PayPal"
+
+#: includes/classes/CCBSettingsData.php:173
+msgid "reCAPTCHA"
+msgstr "reCAPTCHA"
+
+#: templates/admin/settings.php:31
+msgid "- Select Calculator Box Style -"
+msgstr "-选择计算器边框样式-"
+
+#: templates/admin/settings.php:32
+msgid "Vertical"
+msgstr "垂直"
+
+#: templates/admin/settings.php:33
+msgid "Horizontal"
+msgstr "水平"
+
+#: templates/admin/settings.php:46 templates/admin/settings.php:66
+msgid "show"
+msgstr "显示"
+
+#: templates/admin/settings.php:47 templates/admin/settings.php:67
+msgid "hide"
+msgstr "隐藏"
+
+#: templates/admin/settings.php:80
+msgid "- Type Currency Symbol -"
+msgstr "-类型货币符号-"
+
+#: templates/admin/settings.php:88
+msgid "- Select Currency Position -"
+msgstr "- 选择货币头寸 -"
+
+#: templates/admin/settings.php:89
+msgid "Left"
+msgstr "左"
+
+#: templates/admin/settings.php:90
+msgid "Right"
+msgstr "右"
+
+#: templates/admin/settings.php:91
+msgid "Left with space"
+msgstr "左侧留空"
+
+#: templates/admin/settings.php:92
+msgid "Right with space"
+msgstr "右侧留空"
+
+#: templates/admin/calculator.php:62
+msgid "Remove Field"
+msgstr "移除字段"
+
+#: templates/admin/calculator.php:68
+msgid "Place element here"
+msgstr "在此放置元素"
+
+#: templates/admin/calculator.php:91
+msgid "Click to add"
+msgstr "单击以添加"
+
+#: templates/admin/conditions.php:19
+msgid "Your Elements"
+msgstr "您的元素"
+
+#: templates/admin/conditions.php:20
+msgid "Click Element for adding"
+msgstr "单击要添加的元素"
+
+#: templates/admin/partials/demo-import.php:42
+msgid "OR"
+msgstr "或者"
+
+#: templates/admin/modal/create-new.php:2
+msgid "Do you Want To Save Current Calculator?"
+msgstr "是否保存当前计算？"
+
+#: templates/admin/modal/create-new.php:11
+msgid "Save & Create new"
+msgstr "保存并创建"
+
+#: templates/admin/modal/create-new.php:17
+msgid "Dont save & Create New"
+msgstr "不保存并创建"
+
+#: templates/admin/modal/condition.php:6
+msgid "Edit Link"
+msgstr "编辑链接"
+
+#: templates/admin/modal/condition.php:36
+#: templates/admin/modal/condition.php:72
+msgid "Value"
+msgstr "值"
+
+#: templates/admin/modal/condition.php:27
+msgid "Select Condition"
+msgstr "选择条件"
+
+#: templates/admin/modal/condition.php:189
+msgid "No Conditions Yet"
+msgstr "还没有条件"
+
+#: templates/admin/modal/condition.php:198
+msgid "Add condition"
+msgstr "添加条件"
+
+#: templates/admin/partials/existing.php:23
+msgid "id"
+msgstr "id"
+
+#: templates/admin/partials/existing.php:25
+msgid "calculator name"
+msgstr "名称"
+
+#: templates/admin/partials/existing.php:26
+msgid "shortcode"
+msgstr "简码"
+
+#: templates/admin/partials/existing.php:27
+msgid "action"
+msgstr "操作"
+
+#: templates/admin/partials/existing.php:61
+msgid "No Calculators yet! Please create new or Import Calculators."
+msgstr "还没有计算！请新建或导入计算。"
+
+#: templates/admin/calculator.php:23
+msgid "Elements"
+msgstr "元素"
+
+#: templates/admin/calculator.php:24
+msgid "Drag & Drop or click for adding"
+msgstr "拖放或单击以添加"
+
+#: templates/admin/calculator.php:53
+msgid "edit"
+msgstr "编辑"
+
+#: includes/classes/CCBCalculators.php:52
+msgid "There is no calculator with this id"
+msgstr "没有使用此id的计算项目"
+
+#: includes/classes/CCBCalculators.php:115
+msgid "Couldn't duplicate calculator, please try again!', 'cost-calculator-builder"
+msgstr "无法复制计算项目，请重试！'，'成本计算生成器"
+
+#: includes/classes/CCBCalculators.php:182
+msgid "Calculator duplicated successfully"
+msgstr "计算项目复制成功"
+
+#: includes/classes/CCBCalculators.php:289
+msgid "Calculator deleted successfully"
+msgstr "计算项目删除成功"
+
+#: includes/classes/CCBFrontController.php:49
+msgid "No selected calculator"
+msgstr "未选择计算项目"
+
+#: includes/functions.php:10
+msgid "empty name"
+msgstr "空名称"
+
+#: templates/admin/modal/condition.php:24
+msgid "Condition"
+msgstr "条件"
+
+#: templates/admin/main-settings.php:25
+msgid "Settings"
+msgstr "设置"
+
+#: templates/admin/partials/demo-import.php:4
+msgid "Demo Import"
+msgstr "演示导入"
+
+#: templates/admin/partials/demo-import.php:11
+msgid "Finish :)"
+msgstr "已经完成：)"
+
+#: templates/admin/partials/demo-import.php:16
+msgid "Import step progress"
+msgstr "导入执行进度"
+
+#: templates/admin/partials/demo-import.php:39
+msgid "Run Default Demo Import"
+msgstr "运行默认演示导入"
+
+#: templates/admin/partials/demo-import.php:53
+msgid "Choose File"
+msgstr "选择文件"
+
+#: includes/functions.php:170
+msgid "select"
+msgstr "选择"
+
+#: templates/admin/main-settings.php:30
+msgid "Customize"
+msgstr "自定义"
+
+#: widgets/CCB_VC.php:29
+msgid "Keep empty"
+msgstr "留空"
+
+#: widgets/CCB_VC.php:41
+msgid "Content"
+msgstr "内容"
+
+#: widgets/CCB_VC.php:42
+msgid "Place Cost Calculator Builder"
+msgstr "Place Cost 成本计算生成器"
+
+#: widgets/CCB_Elementor_Widget.php:89 widgets/CCB_VC.php:46
+msgid "Select calculator"
+msgstr "选择计算"
+
+#: templates/admin/main-settings.php:14 widgets/CCB_Elementor_Widget.php:96
+msgid "Calculator"
+msgstr "计算"
+
+#: includes/widget.php:24
+msgid "Elementor CCB Widgets is not working because you are using an old version of Elementor."
+msgstr "Elementor CCB 小工具无法工作，因为您使用的是旧版本的Elementor。"
+
+#: includes/widget.php:25
+msgid "Update Elementor Now"
+msgstr "立即更新Elementor"
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/cost-calculator-builder/"
+msgstr "https://cn.wordpress.org/plugins/cost-calculator-builder/"
+
+#. Description of the plugin
+msgid "WP Cost Calculator helps you to build any type of estimation forms on a few easy steps. The plugin offers its own calculation builder."
+msgstr "WP Cost Calculator可帮助您通过几个简单的步骤构建任何类型的估算表。。该插件也附带了自己的计算生成器。"
+
+#. Author of the plugin
+msgid "StylemixThemes"
+msgstr "StylemixThemes"
+
+#. Author URI of the plugin
+msgid "https://stylemixthemes.com/"
+msgstr "https://stylemixthemes.com/"
+
+#: includes/init.php:86
+msgctxt "post type singular name"
+msgid "Calc"
+msgstr "计算"
+
+#: includes/init.php:88 includes/init.php:93
+msgctxt "Admin bar "
+msgid "%s"
+msgstr "%s"
+
+#: includes/init.php:89
+msgid "Add New %s"
+msgstr "添加新%s"
+
+#: includes/init.php:90
+msgid "New %s"
+msgstr "新建%s"
+
+#: includes/init.php:91
+msgid "Edit %s"
+msgstr "编辑 %s"
+
+#: includes/init.php:92
+msgid "View %s"
+msgstr "查看 %s"
+
+#: includes/init.php:94
+msgid "Search %s"
+msgstr "搜索%s"
+
+#: includes/init.php:95
+msgid "Parent %s:"
+msgstr "父级%s："
+
+#: includes/init.php:96
+msgid "No %s found."
+msgstr "未找到%s"
+
+#: includes/init.php:97
+msgid "No %s found in Trash."
+msgstr "回收站中未找到%s"
+
+#: widgets/CCB_VC.php:35
+msgid "No calculator was found"
+msgstr "未找到计算"
+
+#: includes/classes/CCBSettingsData.php:152 templates/admin/orders.php:20
+msgid "Stripe"
+msgstr "Stripe"
+
+#: templates/admin/partials/header.php:10
+msgid "Cost Calculator"
+msgstr "成本计算"
+
+#: templates/admin/calculator.php:15
+#: templates/admin/fields/checkbox-field.php:7
+#: templates/admin/fields/date-picker-field.php:11
+#: templates/admin/fields/drop-down-field.php:8
+#: templates/admin/fields/drop-down-with-image-field.php:11
+#: templates/admin/fields/file-upload-field.php:11
+#: templates/admin/fields/multi-range-field.php:11
+#: templates/admin/fields/quantity-field.php:7
+#: templates/admin/fields/radio-button-field.php:8
+#: templates/admin/fields/range-button-field.php:5
+#: templates/admin/fields/text-area-field.php:5
+#: templates/admin/fields/toggle-field.php:7
+#: templates/admin/fields/total-field.php:5
+msgid "Name"
+msgstr "名称"
+
+#: templates/admin/modal/modal-preview.php:4
+msgid "Preview"
+msgstr "预览"
+
+#: templates/admin/fields/checkbox-field.php:126
+#: templates/admin/fields/date-picker-field.php:89
+#: templates/admin/fields/drop-down-field.php:122
+#: templates/admin/fields/drop-down-with-image-field.php:126
+#: templates/admin/fields/file-upload-field.php:110
+#: templates/admin/fields/html-field.php:28
+#: templates/admin/fields/line-field.php:56
+#: templates/admin/fields/multi-range-field.php:138
+#: templates/admin/fields/quantity-field.php:127
+#: templates/admin/fields/radio-button-field.php:132
+#: templates/admin/fields/range-button-field.php:126
+#: templates/admin/fields/text-area-field.php:49
+#: templates/admin/fields/toggle-field.php:129
+#: templates/admin/fields/total-field.php:92
+#: templates/admin/modal/create-new.php:24
+#: templates/admin/partials/footer.php:8
+msgid "Cancel"
+msgstr "取消"
+
+#: templates/admin/modal/condition.php:60
+#: templates/admin/settings/woo-products.php:57
+msgid "Action"
+msgstr "操作"
+
+#: templates/admin/partials/existing.php:46
+msgid "Edit"
+msgstr "编辑"
+
+#: templates/admin/modal/condition.php:204 templates/admin/orders.php:120
+#: templates/admin/partials/existing.php:56
+#: templates/admin/partials/existing.php:76
+msgid "Delete"
+msgstr "删除"
+
+#: templates/admin/partials/existing.php:51
+#: templates/admin/partials/existing.php:75
+msgid "Duplicate"
+msgstr "复制"
+
+#: templates/admin/partials/existing.php:14
+msgid "Export calculators"
+msgstr "导出计算"
+
+#. Plugin Name of the plugin
+#: widgets/CCB_Elementor_Widget.php:42 widgets/CCB_VC.php:39
+msgid "Cost Calculator Builder"
+msgstr "成本计算生成器"

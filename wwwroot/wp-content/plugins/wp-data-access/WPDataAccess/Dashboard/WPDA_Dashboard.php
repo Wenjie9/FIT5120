@@ -840,22 +840,6 @@ class WPDA_Dashboard
 							Add database
 						</div>
 						<?php 
-        
-        if ( false && wpda_freemius()->is__premium_only() ) {
-            ?>
-							<div>
-								<i class="fas fa-globe-americas wpda_tooltip" title="Premium data services configuration" onclick="window.location.href='<?php 
-            echo  admin_url( 'admin.php' ) ;
-            // phpcs:ignore WordPress.Security.EscapeOutput
-            ?>?page=<?php 
-            echo  esc_attr( WP_Data_Access_Admin::PAGE_MAIN ) ;
-            ?>&page_action=wpda_premium_data_services'"></i>
-								<br/>
-								Premium data services
-							</div>
-							<?php 
-        }
-        
         ?>
 					</div>
 				</div>

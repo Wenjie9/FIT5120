@@ -12,6 +12,7 @@ use  WPDataAccess\Data_Dictionary\WPDA_List_Columns_Cache ;
 use  WPDataAccess\Data_Tables\WPDA_Data_Tables ;
 use  WPDataAccess\Plugin_Table_Models\WPDA_Table_Settings_Model ;
 use  WPDataAccess\Plugin_Table_Models\WPDA_Publisher_Model ;
+use  WPDataAccess\Premium\WPDAPRO_CPT\WPDAPRO_CPT_Services ;
 use  WPDataAccess\Simple_Form\WPDA_Simple_Form ;
 use  WPDataAccess\Simple_Form\WPDA_Simple_Form_Item_Boolean ;
 use  WPDataAccess\Simple_Form\WPDA_Simple_Form_Item_Enum ;
@@ -34,6 +35,14 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
 {
     protected  $hyperlinks = array() ;
     protected  $color = array() ;
+    protected  $databases = array() ;
+    protected  $cpts = array() ;
+    protected  $cpts_non_selectable = array() ;
+    protected  $cpts_selected = array() ;
+    protected  $cfds = array() ;
+    protected  $cfds_selectable = array() ;
+    protected  $cfds_hidden = array() ;
+    protected  $pub_data_source = 'Table' ;
     /**
      * WPDA_Publisher_Form constructor.
      *
@@ -81,6 +90,10 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
             'pub_table_options_nl2br'         => __( 'NL > BR', 'wp-data-access' ),
             'pub_table_options_advanced'      => __( 'Advanced Options', 'wp-data-access' ),
             'pub_extentions'                  => __( 'Publication Extentions', 'wp-data-access' ),
+            'pub_cpt'                         => __( 'Post type', 'wp-data-access' ),
+            'pub_cpt_fields'                  => __( 'Custom fields', 'wp-data-access' ),
+            'pub_cpt_query'                   => __( 'CPT query', 'wp-data-access' ),
+            'pub_cpt_format'                  => __( 'Field labels', 'wp-data-access' ),
         );
         $this->check_table_type = false;
         $this->title = 'Data Publisher';
@@ -91,6 +104,12 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
             $wpda_list_columns,
             $args
         );
+        // Get available databases.
+        $schema_names = WPDA_Dictionary_Lists::get_db_schemas();
+        foreach ( $schema_names as $schema_name ) {
+            array_push( $this->databases, $schema_name['schema_name'] );
+        }
+        // Add scripts and styles.
         WPDA_Data_Tables::enqueue_styles_and_script();
     }
     
@@ -127,13 +146,6 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
     public function prepare_items( $set_back_form_values = false )
     {
         parent::prepare_items( $set_back_form_values );
-        global  $wpdb ;
-        // Get available databases
-        $schema_names = WPDA_Dictionary_Lists::get_db_schemas();
-        $databases = array();
-        foreach ( $schema_names as $schema_name ) {
-            array_push( $databases, $schema_name['schema_name'] );
-        }
         $i = 0;
         foreach ( $this->form_items as $form_item ) {
             // Prepare listbox for column pub_schema_name
@@ -142,10 +154,15 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
                 if ( '' === $form_item->get_item_value() || null === $form_item->get_item_value() ) {
                     $form_item->set_item_value( WPDA::get_user_default_scheme() );
                 }
-                $form_item->set_enum( $databases );
+                $form_item->set_enum( $this->databases );
                 $this->form_items[$i] = new WPDA_Simple_Form_Item_Enum( $form_item );
             }
             
+            if ( $form_item->get_item_name() === 'pub_data_source' ) {
+                if ( null !== $form_item->get_item_value() ) {
+                    $this->pub_data_source = $form_item->get_item_value();
+                }
+            }
             // Prepare listbox for column pub_table_name
             if ( $form_item->get_item_name() === 'pub_table_name' ) {
                 $this->form_items[$i] = new WPDA_Simple_Form_Item_Enum( $form_item );
@@ -214,13 +231,15 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
                 $form_item->set_enum_options( $options );
             }
             
-            if ( 'pub_default_where' === $form_item->get_item_name() ) {
-            }
             if ( 'pub_default_orderby' === $form_item->get_item_name() ) {
                 $form_item->set_item_hide_icon( true );
             }
             $i++;
         }
+    }
+    
+    protected function init_custom_fields()
+    {
     }
     
     protected function add_fieldsets()
@@ -319,13 +338,81 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
             }
         }
         
-        $index = $this->get_item_index( 'pub_data_source' );
-        $pub_data_source_item = $this->form_items[$index];
-        $pub_data_source = $pub_data_source_item->get_item_value();
         ?>
+			<style>
+                #pub_cpt_fields,
+				#pub_cpt_format,
+				#pub_default_orderby {
+                    display: none;
+                }
+                table.wpda_simple_table td.icon a.button.wpda_tooltip {
+                    width: 120px;
+					text-align: center;
+                }
+                span.pub_premium {
+                    line-height: 40px;
+                }
+                span.pub_buttons {
+                    float: right;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+                div.multiselect_sortable_content {
+                    margin: 0 0 0 6px;
+                }
+                div.selection div.selection_title,
+                div.selectable div.selectable_title {
+                    font-weight: bold;
+                }
+                div.selection ul.selection_content,
+                div.selectable ul.selectable_content {
+                    background-color: white;
+                    border: 1px solid #8c8f94;
+                    border-radius: 4px;
+                    height: 120px;
+                }
+                div.selection ul.selection_content li,
+                div.selectable ul.selectable_content li {
+                    cursor: pointer;
+                    padding: 0 10px;
+                    margin: 0;
+                    border: 0;
+                    user-select: none;
+                }
+                div.selection ul.selection_content li:hover,
+                div.selectable ul.selectable_content li:hover {
+                    font-weight: bold;
+                    background-color: lightgrey;
+                }
+                select.multiselect_sortable_hide {
+                    display: none;
+                }
+				.pub-post-types {
+                    padding-top: 20px !important;
+				}
+			</style>
 			<script type='text/javascript'>
 				let wpda_qb_columns = [];
 				let wpda_sp_columns = [];
+
+				let cpts_all = <?php 
+        echo  wp_json_encode( $this->cpts ) ;
+        ?>;
+				let cpts_non_selectable = <?php 
+        echo  wp_json_encode( $this->cpts_non_selectable ) ;
+        ?>;
+
+				let cfds_selected = <?php 
+        echo  wp_json_encode( $this->cfds ) ;
+        ?>;
+				let cfds_selection = <?php 
+        echo  wp_json_encode( $this->cfds_selectable ) ;
+        ?>;
+				let cfds_hidden = <?php 
+        echo  wp_json_encode( $this->cfds_hidden ) ;
+        ?>;
+				let cfds_default_selectable = [];
+				let cfds_default_hidden = [];
 
 				function set_responsive_columns() {
 					if (jQuery('#pub_responsive').val() == 'Yes') {
@@ -345,501 +432,26 @@ class WPDA_Publisher_Form extends WPDA_Simple_Form
 					}
 				}
 
-				function set_premium_styling() {
-					// Add premium styling
-					if (jQuery("#pub_style_premium").val() == 'Yes') {
-						jQuery("#pub_style_color").prop("readonly", false).prop("disabled", false).removeClass("disabled");
-						jQuery("#pub_style_space").prop("readonly", false).prop("disabled", false).removeClass("disabled");
-						jQuery("#pub_style_corner").prop("readonly", false).prop("disabled", false).removeClass("disabled");
-						jQuery("#pub_style_modal_width").prop("readonly", false).prop("disabled", false).removeClass("disabled");
-					} else {
-						jQuery("#pub_style_color").prop("readonly", true).prop("disabled", true).addClass("disabled");
-						jQuery("#pub_style_space").prop("readonly", true).prop("disabled", true).addClass("disabled");
-						jQuery("#pub_style_corner").prop("readonly", true).prop("disabled", true).addClass("disabled");
-						jQuery("#pub_style_modal_width").prop("readonly", true).prop("disabled", true).addClass("disabled");
-					}
-				}
-
 				function get_selected_columns() {
 					let selectedColumns = table_columns;
-					<?php 
-        if ( 'Table' === $pub_data_source ) {
-            ?>
+					let dataSource = "<?php 
+        echo  esc_attr( $this->pub_data_source ) ;
+        ?>";
+					if (dataSource==="CPT") {
+						selectedColumns = cpt_fields;
+					} else if (dataSource==="Table") {
 						if (jQuery("#pub_column_names").val() !== "*") {
 							selectedColumns = jQuery("#pub_column_names").val().split(",");
 						}
-						<?php 
-        }
-        ?>
+					}
 					return selectedColumns;
 				}
 
-				function get_selected_columns_hint(columns) {
-					selectedColumns = get_selected_columns();
-					selectedColumnsHint = '';
-					for (var i=0; i<columns.length; i++) {
-						if (i>0) {
-							selectedColumnsHint += ", ";
-						}
-						selectedColumnsHint += selectedColumns[columns[i]];
-					}
-					if (selectedColumnsHint!=="") {
-						selectedColumnsHint = "(" + selectedColumnsHint + ")";
-					}
-					return selectedColumnsHint;
-				}
-
-				function config_search(extention) {
-					if (!(Array.isArray(table_columns) && table_columns.length)) {
-						alert("<?php 
-        echo  __( 'To select columns you need to save your publication first', 'wp-data-access' ) ;
-        ?>");
-						return;
-					}
-
-					let dialog = jQuery(`
-						<div class="wpda_sb">
-							<label for="sb_columns">Searchable columns</label>
-						</div>
-					`);
-
-					let sb_columns = jQuery(
-						'<select id="sb_columns" multiple="true" size="8">' +
-						'</select>'
-					);
-					let checkArray = get_selected_columns();
-					jQuery.each(checkArray, function (i, val) {
-						let option = jQuery('<option></option>').attr('value', val).text(val);
-						if (extention==="P") {
-							// Search Panes
-							if (wpda_sp_columns.indexOf(i) > -1) {
-								option.attr("selected", "selected");
-							}
-						} else {
-							// Search Builder
-							if (wpda_qb_columns.indexOf(i) > -1) {
-								option.attr("selected", "selected");
-							}
-						}
-						sb_columns.append(option);
-					});
-					dialog.append(sb_columns);
-					dialog.append(`
-						<div class="wpda_sb">
-							Hold CRTL to select multiple or deselect all</label>
-						</div>
-					`);
-
-					jQuery(dialog).dialog(
-						{
-							dialogClass: 'wp-dialog no-close',
-							title: 'Configure Search Builder',
-							modal: true,
-							autoOpen: true,
-							closeOnEscape: false,
-							resizable: false,
-							width: 400,
-							buttons: {
-								"Select": function () {
-									stringColumns = jQuery("#sb_columns :selected").map(function(index, elem) {
-										return jQuery(elem).val();
-									}).get().join();
-									arrayColumns = stringColumns.split(",");
-									var temp_columns = [];
-									let checkArray = get_selected_columns();;
-									for (let i=0; i<arrayColumns.length; i++) {
-										let index = checkArray.indexOf(arrayColumns[i]);
-										if (index > -1) {
-											temp_columns.push(index);
-										}
-									}
-
-									if (extention==="P") {
-										// Search Panes
-										wpda_sp_columns = temp_columns;
-									} else {
-										// Search Builder
-										wpda_qb_columns = temp_columns;
-									}
-
-									console.log(temp_columns);
-									var show_columns = "";
-									for (var i=0; i<arrayColumns.length; i++) {
-										if (i>0) {
-											show_columns += ", ";
-										}
-										show_columns += arrayColumns[i];
-									}
-									if (show_columns!=="") {
-										show_columns = "(" + show_columns + ")";
-									}
-
-									if (extention==="P") {
-										// Search Panes
-										jQuery("#pub_extention_searchpanes_columns").text(show_columns);
-									} else {
-										// Search Builder
-										jQuery("#pub_extention_searchbuilder_columns").text(show_columns);
-									}
-
-									jQuery(this).dialog('destroy').remove();
-								},
-								"Cancel": function () {
-									jQuery(this).dialog('destroy').remove();
-								}
-							}
-						}
-					);
-				}
-
-				function set_premium_extentions() {
-					// Add premium extentions
-					let jsonString = jQuery("#pub_extentions").val();
-					let json = {};
-					try {
-						json = JSON.parse(jsonString);
-					} catch (e) {}
-
-					// Set default
-					let show_searchbuilder = false;
-					let show_searchpanes = false;
-					let show_button = false;
-					let show_button_text_default = 'label';
-					let show_arrange = false;
-
-					let show_button_text_default_label = 'checked';
-					let show_button_text_default_icon = '';
-					let show_button_text_default_both = '';
-
-					// Process json
-					if (json.dom) {
-						show_searchbuilder = json.dom.includes("Q");
-						show_searchpanes = json.dom.includes("P");
-						show_button = json.dom.includes("B");
-					}
-					if (json.arrange) {
-						show_arrange = json.arrange;
-					}
-					if (json.button_caption) {
-						show_button_text_default = json.button_caption;
-					}
-
-					let ext_button = show_button ? 'checked' : '';
-					let ext_button_text = show_button ? '' : 'style="display:none"';
-
-					switch (show_button_text_default) {
-						case 'both':
-							show_button_text_default_label = '';
-							show_button_text_default_icon = '';
-							show_button_text_default_both = 'checked';
-							break;
-						case 'icon':
-							show_button_text_default_label = '';
-							show_button_text_default_icon = 'checked';
-							show_button_text_default_both = '';
-							break;
-						default:
-							show_button_text_default_label = 'checked';
-							show_button_text_default_icon = '';
-							show_button_text_default_both = '';
-					}
-					ext_searchbuilder = show_searchbuilder ? 'checked' : '';
-					ext_searchbuilder_columns = '';
-					if (show_searchbuilder && json.wpda_qb_columns) {
-						ext_searchbuilder_columns = get_selected_columns_hint(json.wpda_qb_columns);
-					}
-					ext_searchbuilder_text = show_searchbuilder ? '' : 'style="display:none"';
-
-					ext_searchpanes = show_searchpanes ? 'checked' : '';
-					ext_searchpanes_columns = "";
-					if (show_searchpanes && json.wpda_sp_columns) {
-						ext_searchpanes_columns = get_selected_columns_hint(json.wpda_sp_columns);
-					}
-					ext_searchpanes_text = show_searchpanes ? '' : 'style="display:none"';
-
-					ext_arrange = show_arrange ? 'checked' : '';
-					ext_arrange_text = show_arrange ? '' : 'style="display:none"';
-
-					jQuery("#wpda_table_expand_pub_extent tbody").prepend(`
-						<tr>
-							<td class="label">
-								<label>Search Builder</label>
-							</td>
-							<td class="data">
-								<label>
-									<input type="checkbox" id="pub_extention_searchbuilder" ${ext_searchbuilder} onchange="jQuery('.jdtDomQB').toggle()" />
-									Add search builder
-									<span id="pub_extention_searchbuilder_columns">${ext_searchbuilder_columns}</span>
-								</label>
-							</td>
-							<td class="icon">
-								<a id="config_search_builder" class="button wpda_tooltip" href="javascript:void(0)" title="Configure Search Builder" onclick="config_search('Q')">
-									<span class="material-icons wpda_icon_on_button">settings</span> Config
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td class="label">
-								<label>Search Panes</label>
-							</td>
-							<td class="data">
-								<label>
-									<input type="checkbox" id="pub_extention_searchpanes" ${ext_searchpanes} onchange="jQuery('.jdtDomSP').toggle()" />
-									Add search panes
-									<span id="pub_extention_searchpanes_columns">${ext_searchpanes_columns}</span>
-								</label>
-							</td>
-							<td class="icon">
-								<a id="config_search_panes" class="button wpda_tooltip" href="javascript:void(0)" title="Configure Search Panes" onclick="config_search('P')">
-									<span class="material-icons wpda_icon_on_button">settings</span> Config
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td class="label">
-								<label>Buttons</label>
-							</td>
-							<td class="data">
-								<label>
-									<input type="checkbox" id="pub_extention_buttons" ${ext_button} onchange="jQuery('.wpda-button-extention, .jdtDomB').toggle(); jdtDomButtonExpand(jQuery('#jdtDom .wpda-jdtdom-expand').parent(), true)" />
-									Add buttons
-								</label>
-							</td>
-							<td class="icon"></td>
-						</tr>
-						<tr ${ext_button_text} class="wpda-button-extention">
-							<td class="label">
-								<label>Add Buttons</label>
-							</td>
-							<td class="data">
-								<div id="wpda_buttons">
-									<label id="wpda_buttons_C" title="Add export to CSV button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_csv" data-dom="C" />
-										CSV
-									</label>
-									<label id="wpda_buttons_E" title="Add export to Excel button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_excel" data-dom="E" />
-										Excel
-									</label>
-									<label id="wpda_buttons_F" title="Add export to PDF button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_pdf" data-dom="F" />
-										PDF
-									</label>
-									<label id="wpda_buttons_P" title="Add Print button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_print" data-dom="P" />
-										Print
-									</label>
-									<label id="wpda_buttons_Y" title="Add Copy button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_copy" data-dom="Y" />
-										Copy
-									</label>
-									<label id="wpda_buttons_S" title="Add export to SQL button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_sql" data-dom="S" />
-										SQL
-									</label>
-									<label id="wpda_buttons_V" title="Toggle column visibility from a list" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_columnlist" data-dom="V" />
-										Column list
-									</label>
-									<label id="wpda_buttons_T" title="Toggle column visibility from a button" class="wpda_tooltip">
-										<input type="checkbox" id="pub_extention_buttons_columnbutton" data-dom="T" />
-										Column button
-									</label>
-								</div>
-							</td>
-							<td class="icon">
-								<span title="Drag and drop to change button order
-Column button does not support icons" class="material-icons pointer wpda_tooltip">help</span>
-							</td>
-						</tr>
-						<tr ${ext_button_text} class="wpda-button-extention">
-							<td class="label">
-								<label>Button Caption</label>
-							</td>
-							<td class="data">
-								<div>
-									<label>
-										<input type="radio" name="pub_extention_buttons_text" value="label" style="width:unset" ${show_button_text_default_label} />
-										Labels only
-									</label>
-									<label class="wpda-left-indent">
-										<input type="radio" name="pub_extention_buttons_text" value="icon" style="width:unset" ${show_button_text_default_icon} />
-										Icons only
-									</label>
-									<label class="wpda-left-indent">
-										<input type="radio" name="pub_extention_buttons_text" value="both" style="width:unset" ${show_button_text_default_both} />
-										Labels and icons
-									</label>
-								</div>
-							</td>
-							<td class="icon"></td>
-						</tr>
-						<tr>
-							<td class="label" style="vertical-align:top;padding-top:7px;height:28px;">
-								<label>
-									<input type="checkbox" id="pub_extention_arrange" onchange="jQuery('#jdtDom, #jdtDomDefault').toggle()" ${ext_arrange} style="vertical-align:sub;" />
-									Arrange
-								</label>
-							</td>
-							<td class="data">
-								<div id="jdtDom" ${ext_arrange_text}>
-									<div class="jdtDom3 jdtDomQB" ${ext_searchbuilder_text} data-dom="Q">search builder</div>
-									<div class="jdtDom3 jdtDomSP" ${ext_searchpanes_text} data-dom="P">search panes</div>
-									<div class="jdtDom3 jdtDomB" ${ext_button_text} data-dom="B">export buttons<i class="fas fa-expand wpda-jdtdom-expand wpda_tooltip" title="Click to switch  position"></i></div>
-									<div class="jdtDomPL" data-dom="l">page length</div>
-									<div class="jdtDomHeader" data-dom="hdr"></div>
-									<div class="jdtDomSB" data-dom="f">search box</div>
-									<div class="jdtDom3 jdtDomP" data-dom="r">processing...</div>
-									<div class="jdtDom3 jdtDomT" data-dom="t">table</div>
-									<div class="jdtDomS" data-dom="i">summary</div>
-									<div class="jdtDomFooter" data-dom="ftr"></div>
-									<div class="jdtDomPA" data-dom="p">pagination</div>
-								</div>
-							</td>
-							<td class="icon" style="vertical-align:top;padding-top:7px;">
-								<span title="(1) Select elements to be displayed
-(2) Drag and drop to arrange elements" class="material-icons pointer wpda_tooltip">help</span>
-								<div id="jdtDomDefault" ${ext_arrange_text}>
-									<label><input type="checkbox" checked onchange="toggleDomElement(jQuery(this))" data-dom="l" data-dom-elem="jdtDomPL" />page length</label><br/>
-									<label><input type="checkbox" checked onchange="toggleDomElement(jQuery(this))" data-dom="f" data-dom-elem="jdtDomSB" />search box</label><br/>
-									<label><input type="checkbox" checked onchange="toggleDomElement(jQuery(this))" data-dom="r" data-dom-elem="jdtDomP"  />processing...</label><br/>
-									<label><input type="checkbox" checked onchange="toggleDomElement(jQuery(this))" data-dom="t" data-dom-elem="jdtDomT"  />table</label><br/>
-									<label><input type="checkbox" checked onchange="toggleDomElement(jQuery(this))" data-dom="i" data-dom-elem="jdtDomS"  />summary</label><br/>
-									<label><input type="checkbox" checked onchange="toggleDomElement(jQuery(this))" data-dom="p" data-dom-elem="jdtDomPA"  />pagination</label>
-								</div>
-							</td>
-						</tr>
-					`);
-
-					if (json.dom) {
-						// Reset selected dom elements
-						jQuery("#jdtDomDefault input[type=checkbox]").each(function() {
-							if (!json.dom.includes(jQuery(this).data("dom"))) {
-								jQuery(this).prop("checked", false);
-								jQuery(this).change();
-							}
-						});
-
-						// Add panes if not yet available in array
-						var indexSB = json.button_grid.indexOf("Q");
-						if (indexSB!==-1) {
-							json.button_grid.splice(indexSB+1, 0, "P");
-						}
-
-						// Reposition elements
-						if (json.button_grid) {
-							for (let i=json.button_grid.length; i>=0; i--) {
-								jQuery("#jdtDom").prepend(jQuery("#jdtDom>div[data-dom=" + json.button_grid[i] + "]"));
-							}
-						}
-					}
-
-					if (json.selected_buttons) {
-						// Rearrange selected buttons
-						for (let i=json.selected_buttons.length+1; i>=0; i--) {
-							jQuery("#wpda_buttons_" + json.selected_buttons[i] + ">input[type=checkbox]").prop("checked", true);
-							jQuery("#wpda_buttons").prepend(jQuery("#wpda_buttons_" + json.selected_buttons[i]));
-						}
-					}
-
-					// Correction
-					if (json.button_grid && json.button_grid.length===0) {
-						json.button_width = 3;
-					}
-
-					if (json.button_width && json.button_width==1) {
-						jQuery("#jdtDom .jdtDomB").removeClass("jdtDom3");
-						jQuery("#jdtDom .jdtDomHeader").hide();
-					}
-
-					if (json.wpda_qb_columns) {
-						wpda_qb_columns = json.wpda_qb_columns;
-					}
-
-					if (json.wpda_sp_columns) {
-						wpda_sp_columns = json.wpda_sp_columns;
-					}
-
-					jQuery("#wpda_buttons").sortable();
-					jQuery("#jdtDom").sortable();
-					jQuery(".wpda-jdtdom-expand").on("click", function() {
-						jdtDomButtonExpand(jQuery(this).parent());
-					});
-				}
-
-				function toggleDomElement(elem, reset=false) {
-					const label = elem.parent().text();
-					const className = elem.data("domElem")
-					if (jQuery("." + className).text()===label) {
-						jQuery("." + className).text("");
-					} else {
-						jQuery("." + className).text(label);
-					}
-				}
-
-				function jdtDomButtonExpand(elem, reset=false) {
-					if (!elem.hasClass("jdtDom3") || reset) {
-						elem.addClass("jdtDom3");
-						elem.insertAfter("#jdtDom .jdtDomSP");
-						jQuery("#jdtDom .jdtDomHeader").show();
-					} else {
-						elem.removeClass("jdtDom3");
-						elem.insertAfter("#jdtDom .jdtDomHeader");
-						jQuery("#jdtDom .jdtDomHeader").hide();
-					}
-				}
+				<?php 
+        ?>
 
 				function pre_submit_form() {
 					// Simple form will automatically find and execute this function before the submit_form().
-					// Process extensions.
-					let json = {};
-					if (jQuery("#pub_extention_arrange").is(":checked")) {
-						let dom = "";
-						jQuery("#jdtDom div").each(function() {
-							if (
-								jQuery(this).css("display")!=="none" &&
-								jQuery(this).text()!=="" &&
-								jQuery(this).data("dom")
-							) {
-								if (jQuery(this).data("dom")==="B" && jQuery(this).hasClass("jdtDom3")) {
-									dom += "<'wpda-buttons'" + jQuery(this).data("dom") + ">";
-								} else {
-									dom += jQuery(this).data("dom");
-								}
-							}
-						});
-						json.dom = dom;
-						json.arrange = true;
-						json.button_caption = jQuery("#wpda_table_expand_pub_extent input[name=pub_extention_buttons_text]:checked").val();
-						json.selected_buttons = getSelectButtons();
-						json.button_width = jQuery("#jdtDom .jdtDomB").hasClass("jdtDom3") ? 3 : 1;
-						json.button_grid = [];
-						jQuery("#jdtDom>div").each(function() {
-							json.button_grid.push(jQuery(this).data("dom"));
-						});
-					} else {
-						let dom = "";
-						if (jQuery("#pub_extention_searchbuilder").is(":checked")) {
-							dom += "Q";
-						}
-						if (jQuery("#pub_extention_searchpanes").is(":checked")) {
-							dom += "P";
-						}
-						if (jQuery("#pub_extention_buttons").is(":checked")) {
-							dom += "B";
-						}
-						dom += "lfrtip";
-						json.dom = dom;
-						json.arrange = false;
-						json.button_caption = jQuery("#wpda_table_expand_pub_extent input[name=pub_extention_buttons_text]:checked").val();
-						json.selected_buttons = getSelectButtons();
-						json.button_width = 3;
-						json.button_grid = [];
-					}
-					json.wpda_qb_columns = wpda_qb_columns; // select columns search builder
-					json.wpda_sp_columns = wpda_sp_columns; // select columns search panes
-					jQuery("#pub_extentions").val(JSON.stringify(json));
-
 					// Process order by.
 					let defaultOrderBy = "";
 					jQuery(".wpda_dp_orderby").each(function() {
@@ -858,25 +470,26 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					});
 					jQuery("#pub_default_orderby").val(defaultOrderBy);
 
+					<?php 
+        ?>
+
 					return true;
 				}
 
-				function getSelectButtons() {
-					let selected_buttons = "";
-
-					jQuery("#wpda_buttons input[type=checkbox]").each(function() {
-						if (jQuery(this).is(":checked")) {
-							selected_buttons += jQuery(this).data("dom");
+				function getListValues(list) {
+					let values = [];
+					list.each(
+						function() {
+							values.push(jQuery(this).text());
 						}
-					});
-
-					return selected_buttons;
+					);
+					return values;
 				}
 
 				function update_table_list(table_name = '') {
 					var url = location.pathname + '?action=wpda_get_tables';
 					var data = {
-						wpdaschema_name: jQuery('[name="pub_schema_name"]').val(),
+						wpdaschema_name: jQuery("[name='pub_schema_name']").val(),
 						wpda_wpnonce: '<?php 
         echo  esc_attr( wp_create_nonce( 'wpda-getdata-access-' . WPDA::get_current_user_login() ) ) ;
         ?>'
@@ -891,10 +504,10 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 								jQuery('<option/>', {
 									value: tables[i].table_name,
 									html: tables[i].table_name
-								}).appendTo('[name="pub_table_name"]');
+								}).appendTo("[name='pub_table_name']");
 							}
 							if (table_name!=='') {
-								jQuery('[name="pub_table_name"]').val(table_name);
+								jQuery("[name='pub_table_name']").val(table_name);
 							} else {
 								jQuery('#pub_column_names').val('*');
 								jQuery('#pub_format').val('');
@@ -905,9 +518,9 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 				}
 
 				function updateWordPressDatabaseName() {
-					jQuery("#pub_schema_name option[value=<?php 
+					jQuery("#pub_schema_name option[value='<?php 
         echo  esc_attr( $wpdb_name ) ;
-        ?>]").text("WordPress database (<?php 
+        ?>']").text("WordPress database (<?php 
         echo  esc_attr( $wpdb_name ) ;
         ?>)");
 				}
@@ -918,9 +531,9 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					<?php 
         if ( wpda_freemius()->is_free_plan() ) {
             ?>
-						jQuery("#pub_id").parent().parent().parent().append("<tr><td></td><td><span class='pub_premium'>The premium version supports custom queries</span><span class='pub_buttons'><a href='https://wpdataaccess.com/pricing/' target='_blank' class='button button-primary'>UPGRADE TO PREMIUM</a> <a href='https://wpdataaccess.com/docs/documentation/data-publisher/custom-queries/' target='_blank' class='button'>READ MORE</a></span></td><td></td></tr>");
-						jQuery("#pub_sort_icons").parent().parent().parent().append("<tr><td></td><td><span class='pub_premium'>The premium version allows styling from within the Data Publisher</span><span class='pub_buttons'><a href='https://wpdataaccess.com/pricing/' target='_blank' class='button button-primary'>UPGRADE TO PREMIUM</a> <a href='https://wpdataaccess.com/docs/documentation/data-publisher/premium-styling/' target='_blank' class='button'>READ MORE</a></span></td><td></td></tr>");
-						jQuery("#pub_default_where").parent().parent().parent().append("<tr><td></td><td><span class='pub_premium'>The premium version supports extension management from within the Data Publisher</span><span class='pub_buttons'><a href='https://wpdataaccess.com/pricing/' target='_blank' class='button button-primary'>UPGRADE TO PREMIUM</a> <a href='https://wpdataaccess.com/docs/documentation/data-publisher/premium-extentions/' target='_blank' class='button'>READ MORE</a></span></td><td></td></tr>");
+						jQuery("#pub_id").closest("tbody").append("<tr><td></td><td><span class='pub_premium'>The premium version supports custom queries and custom post types</span><span class='pub_buttons'><a href='https://wpdataaccess.com/pricing/' target='_blank' class='button button-primary'>UPGRADE TO PREMIUM</a> <a href='https://wpdataaccess.com/docs/documentation/data-publisher/custom-queries/' target='_blank' class='button'>READ MORE</a></span></td><td></td></tr>");
+						jQuery("#pub_sort_icons").closest("tbody").append("<tr><td></td><td><span class='pub_premium'>The premium version allows styling from within the Data Publisher</span><span class='pub_buttons'><a href='https://wpdataaccess.com/pricing/' target='_blank' class='button button-primary'>UPGRADE TO PREMIUM</a> <a href='https://wpdataaccess.com/docs/documentation/data-publisher/premium-styling/' target='_blank' class='button'>READ MORE</a></span></td><td></td></tr>");
+						jQuery("#pub_default_where").closest("tbody").append("<tr><td></td><td><span class='pub_premium'>The premium version supports extension management from within the Data Publisher</span><span class='pub_buttons'><a href='https://wpdataaccess.com/pricing/' target='_blank' class='button button-primary'>UPGRADE TO PREMIUM</a> <a href='https://wpdataaccess.com/docs/documentation/data-publisher/premium-extentions/' target='_blank' class='button'>READ MORE</a></span></td><td></td></tr>");
 						<?php 
         }
         ?>
@@ -959,29 +572,28 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
         }
         ?>
 
-					jQuery('[name="pub_schema_name"]').on('change', function () {
+					jQuery("[name='pub_schema_name']").on('change', function () {
 						update_table_list();
 					});
 					update_table_list('<?php 
         echo  esc_attr( $table_name ) ;
         ?>');
 
-					jQuery('[name="pub_table_name"]').on('change', function () {
+					jQuery("[name='pub_table_name']").on('change', function () {
 						jQuery('#pub_column_names').val('*');
 						jQuery('#pub_format').val('');
 						table_columns = [];
 					});
 
-					jQuery('#pub_default_where').parent().parent().find('.icon').empty().append('<span title="Enter a valid sql where clause, for example:\nfirst_name like \'Peter%\'" class="material-icons pointer wpda_tooltip">help</span>');
-					jQuery('#pub_table_options_searching').parent().parent().parent().find('.icon').empty().append('<span title="When paging is disabled, all rows are fetch on page load (this implicitly disables server side processing)\n\nEnable NL > BR to automatically convert New Lines to <BR> tags" class="material-icons pointer wpda_tooltip">help</span>');
-					jQuery('#pub_table_options_advanced').parent().parent().find('.icon').empty().append('<span title=\'Must be valid JSON:\n{"option":"value","option2","value2"}\' class="material-icons pointer wpda_tooltip">help</span>');
-					jQuery('#pub_table_options_advanced').parent().parent().find('.icon').append('<br/><a href="https://datatables.net/reference/option/" target="_blank" title="Click to check jQuery DataTables website for available\noptions (opens in a new tab or window)" class="dashicons dashicons-external wpda_tooltip" style="margin-top:5px;"></a>');
-					jQuery('#pub_sort_icons').parent().parent().find('.icon').empty().append('<span title="default: jQuery DataTables sort icons\nplugin: material ui sort icons\nnone: hide sort icons" class="material-icons pointer wpda_tooltip">help</span>');
-					jQuery('#pub_styles').parent().parent().find('.icon').empty().append('<span title="Hold control key to selected multiple" class="material-icons pointer wpda_tooltip">help</span>');
-					jQuery('#pub_style_premium').parent().parent().find('.icon').empty().append('<a href="<?php 
-        echo  admin_url( 'options-general.php' ) ;
-        // phpcs:ignore WordPress.Security.EscapeOutput
-        ?>?page=wpdataaccess&tab=datapublisher" target="_blank"><span title="Yes: use premium styling settings below\nNo: use default plugin styling\n\nNOTE\nSet global publication style to Default to activate premium style (click to check)" class="material-icons pointer wpda_tooltip">help</span></a>');
+					<?php 
+        ?>
+
+					jQuery('#pub_default_where').closest("tr").find('td.icon').empty().append('<span title="Enter a valid sql where clause, for example:\nfirst_name like \'Peter%\'" class="material-icons pointer wpda_tooltip">help</span>');
+					jQuery('#pub_table_options_searching').closest("tr").find('td.icon').empty().append('<span title="When paging is disabled, all rows are fetch on page load (this implicitly disables server side processing)\n\nEnable NL > BR to automatically convert New Lines to <BR> tags" class="material-icons pointer wpda_tooltip">help</span>');
+					jQuery('#pub_table_options_advanced').closest("tr").find('td.icon').empty().append('<span title=\'Must be valid JSON:\n{"option":"value","option2","value2"}\' class="material-icons pointer wpda_tooltip">help</span>');
+					jQuery('#pub_table_options_advanced').closest("tr").find('td.icon').append('<br/><a href="https://datatables.net/reference/option/" target="_blank" title="Click to check jQuery DataTables website for available\noptions (opens in a new tab or window)" class="dashicons dashicons-external wpda_tooltip" style="margin-top:5px;"></a>');
+					jQuery('#pub_sort_icons').closest("tr").find('td.icon').empty().append('<span title="default: jQuery DataTables sort icons\nplugin: material ui sort icons\nnone: hide sort icons" class="material-icons pointer wpda_tooltip">help</span>');
+					jQuery('#pub_styles').closest("tr").find('td.icon').empty().append('<span title="Hold control key to selected multiple" class="material-icons pointer wpda_tooltip">help</span>');
 
 					jQuery( '.wpda_tooltip' ).tooltip();
 					jQuery( '.wpda_tooltip_ic' ).tooltip({
@@ -1033,13 +645,6 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 						jQuery("#pub_style_modal_width_val").html(jQuery("#pub_style_modal_width").val() + "%");
 					}
 
-					set_premium_styling();
-					set_premium_extentions();
-
-					jQuery("#pub_style_premium").on('change', function () {
-						set_premium_styling();
-					});
-
 					// Add default order by UI.
 					jQuery("#pub_default_orderby").before(createOrderByLine(0));
 					// Restore default sorting.
@@ -1063,27 +668,10 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
         ?>
 				});
 
-				function updateDataSource() {
-					if (jQuery("input[name=pub_data_source]:checked").val()==="Table") {
-						jQuery("#pub_table_name").closest("tr").show();
-						jQuery("#pub_column_names").closest("tr").show();
-						jQuery("#pub_format").closest("tr").show();
-						jQuery("#pub_default_where").closest("tr").show();
-						jQuery("#pub_default_orderby").closest("tr").show();
-						jQuery("#pub_query").closest("tr").hide();
-					} else {
-						jQuery("#pub_table_name").closest("tr").hide();
-						jQuery("#pub_column_names").closest("tr").hide();
-						jQuery("#pub_format").closest("tr").hide();
-						jQuery("#pub_default_where").closest("tr").hide();
-						jQuery("#pub_default_orderby").closest("tr").hide();
-						jQuery("#pub_query").closest("tr").show();
-					}
-				}
-
 				let no_cols_selected = '* (= show all columns)';
 
 				let table_columns = [];
+				let cpt_fields = [];
 				<?php 
         foreach ( $columns as $column ) {
             ?>
@@ -1119,7 +707,7 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					jQuery('select#columns_selected option').prop("selected", false);
 				}
 
-				function select_selected(e) {
+				function select_selected() {
 					var option = jQuery("#columns_selected option:selected");
 					if (option[0].value === '*') {
 						// Cannot remove ALL.
@@ -1138,7 +726,7 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					jQuery('select#columns_available option').prop("selected", false);
 				}
 
-				function select_columns(e) {
+				function select_columns() {
 					if (!(Array.isArray(table_columns) && table_columns.length)) {
 						alert("<?php 
         echo  __( 'To select columns you need to save your publication first', 'wp-data-access' ) ;
@@ -1153,7 +741,7 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					jQuery.each(table_columns, function (i, val) {
 						columns_available.append(jQuery('<option></option>').attr('value', val).text(val));
 					});
-					for (i=0; i<hyperlinks.length;i++) {
+					for (let i=0; i<hyperlinks.length;i++) {
 						columns_available.append(jQuery('<option></option>').attr('value', 'wpda_hyperlink_' + i).text('Hyperlink: ' + hyperlinks[i]));
 					}
 
@@ -1167,7 +755,7 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					if (currently_select_values.length === 0) {
 						currently_select_option = '<option value="*">' + no_cols_selected + '</option>';
 					} else {
-						for (var i = 0; i < currently_select_values.length; i++) {
+						for (let i=0; i < currently_select_values.length; i++) {
 							if (currently_select_values[i].substr(0,15)==='wpda_hyperlink_') {
 								hyperlink_no = currently_select_values[i].substr(15);
 								if (hyperlink_no<hyperlinks.length) {
@@ -1229,9 +817,91 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					);
 
 					// Remove selected columns from available columns
-					for (var i = 0; i < currently_select_values.length; i++) {
+					for (let i = 0; i < currently_select_values.length; i++) {
 						jQuery("#columns_available option[value='" + currently_select_values[i] + "']").remove();
 					}
+				}
+
+				function format_cpt_columns() {
+					if (!(Array.isArray(cpt_fields) && cpt_fields.length)) {
+						alert("<?php 
+        echo  __( 'To format columns you need to save your publication first', 'wp-data-access' ) ;
+        ?>");
+						return;
+					}
+
+					let pub_cpt_format = null;
+					try {
+						pub_cpt_format = JSON.parse(jQuery('#pub_cpt_format').val());
+					} catch (e) {
+						pub_cpt_format = null;
+					}
+
+					let dialog_table = jQuery('<table></table>');
+					dialog_table.append(
+						jQuery('<tr></tr>').append(
+							jQuery('<th style="text-align:left;"><?php 
+        echo  __( 'Field Name', 'wp-data-access' ) ;
+        ?></th>'),
+							jQuery('<th style="text-align:left;"><?php 
+        echo  __( 'Field Label', 'wp-data-access' ) ;
+        ?></th>'),
+						)
+					);
+
+					for (let i=0; i<cpt_fields.length; i++) {
+						let label = cpt_fields[i];
+						try {
+							label = pub_cpt_format.cpt_format.cpt_labels[cpt_fields[i]];
+						} catch (e) {
+							label = cpt_fields[i];
+						}
+						dialog_table.append(
+							jQuery('<tr></tr>').append(
+								jQuery('<td style="text-align:left;">' + cpt_fields[i] + '</td>'),
+								jQuery('<td style="text-align:left;"><input type="text" class="cpt_label" name="' + cpt_fields[i] + '" value="' + label + '"></td>'),
+							)
+						);
+					}
+
+					let dialog_text = jQuery('<div></div>');
+					let dialog = jQuery('<div id="define_cpt_labels"></div>');
+
+					dialog.append(dialog_text);
+					dialog.append(dialog_table);
+
+					jQuery(dialog).dialog({
+						dialogClass: 'wp-dialog no-close',
+						title: 'Define field labels',
+						modal: true,
+						autoOpen: true,
+						closeOnEscape: false,
+						resizable: false,
+						width: 'auto',
+						buttons: {
+							"OK": function () {
+								// Create JSON from defined field labels
+								var cpt_labels = {};
+								jQuery("#define_cpt_labels input.cpt_label").each(
+									function () {
+										cpt_labels[jQuery(this).attr('name')] = jQuery(this).val();
+									}
+								);
+
+								// Write JSON to column pub_format
+								cpt_format = {
+									"cpt_format": {
+										"cpt_labels": cpt_labels
+									}
+								};
+								jQuery('#pub_cpt_format').val(JSON.stringify(cpt_format));
+								jQuery(this).dialog('destroy').remove();
+							},
+							"Cancel": function () {
+								jQuery(this).dialog('destroy').remove();
+							}
+						}
+					});
 				}
 
 				function format_columns() {
@@ -1387,7 +1057,6 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 								jQuery(".wpda-query-select-title-copy").on("click", function() {
 									selectedDbs = jQuery(this).closest("li").data("dbs");
 									selectedQuery = jQuery(this).closest("li").find("textarea").val();
-									console.log(selectedDbs, selectedQuery);
 
 									jQuery("#pub_schema_name").val(selectedDbs);
 									jQuery("#pub_query").val(selectedQuery);
@@ -1405,37 +1074,30 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					);
 				}
 
-				var publication_loaded = false;
 				function test_publication() {
-					if (!publication_loaded) {
-						jQuery.ajax({
-							type: "POST",
-							url: "<?php 
+					jQuery.ajax({
+						type: "POST",
+						url: "<?php 
         echo  admin_url( 'admin-ajax.php?action=wpda_test_publication' ) ;
         // phpcs:ignore WordPress.Security.EscapeOutput
         ?>",
-							data: {
-								wpnonce: "<?php 
+						data: {
+							wpnonce: "<?php 
         echo  esc_attr( wp_create_nonce( "wpda-publication-{$pub_id}" ) ) ;
         ?>",
-								pub_id: "<?php 
+							pub_id: "<?php 
         echo  esc_attr( $pub_id ) ;
         ?>"
-							}
-						}).done(
-							function(html) {
-								jQuery("body").append(html);
-								jQuery('#data_publisher_test_container_<?php 
+						}
+					}).done(
+						function(html) {
+							jQuery("body").append(html);
+							jQuery('#data_publisher_test_container_<?php 
         echo  esc_html( $pub_id ) ;
         ?>').show();
-								publication_loaded = true;
-							}
-						);
-					} else {
-						jQuery('#data_publisher_test_container_<?php 
-        echo  esc_html( $pub_id ) ;
-        ?>').toggle();
-					}
+							//publication_loaded = true;
+						}
+					);
 				}
 
 				function addOrderByColumn() {
@@ -1631,13 +1293,13 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 
                     #data_publisher_test_container_<?php 
         echo  esc_html( $pub_id ) ;
-        ?> thead input[type=search],
+        ?> thead input[type='search'],
                     #data_publisher_test_container_<?php 
         echo  esc_html( $pub_id ) ;
         ?> thead select,
                     #data_publisher_test_container_<?php 
         echo  esc_html( $pub_id ) ;
-        ?> tfoot input[type=search],
+        ?> tfoot input[type='search'],
                     #data_publisher_test_container_<?php 
         echo  esc_html( $pub_id ) ;
         ?> tfoot select {
@@ -1670,7 +1332,9 @@ Column button does not support icons" class="material-icons pointer wpda_tooltip
 					<span class="button" style="float:right;"
 						  onclick="jQuery('#data_publisher_test_container_<?php 
         echo  esc_attr( $pub_id ) ;
-        ?>').hide()">x</span><br/>
+        ?>').hide(); jQuery('#data_publisher_test_container_<?php 
+        echo  esc_attr( $pub_id ) ;
+        ?>').remove();">x</span><br/>
 				</div>
 				<?php 
         echo  $publication ;

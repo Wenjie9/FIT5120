@@ -628,6 +628,8 @@ function wpda_datatables_ajax_call(
 	convert_string_to_function(table_options_advanced);
 	jQueryDataTablesOptions = Object.assign(jQueryDataTablesOptions, table_options_advanced);
 
+	// console.log(jQueryDataTablesOptions);
+
 	jQuery("#" + table_name + pub_id).addClass('wpda-datatable');
 	jQuery("#" + table_name + pub_id).DataTable(jQueryDataTablesOptions);
 	jQuery("#" + table_name + pub_id).on("click", "tr", function () {
@@ -642,8 +644,6 @@ function wpda_datatables_ajax_call(
 			return displayHeight + "px";
 		});
 	});
-
-	// console.log(jQueryDataTablesOptions);
 
 	if (jQuery("#" + table_name + pub_id + "_more_button").length>0) {
 		// Add load more rows action

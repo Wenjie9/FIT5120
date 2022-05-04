@@ -4,7 +4,7 @@ Tags: wp data access, database, tables, table, tools, manage, manager, geolocati
 Donate link: https://www.paypal.me/kpsch
 Requires at least: 4.8.3
 Tested up to: 5.9
-Stable tag: 5.1.5
+Stable tag: 5.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ For advanced users, the plugin support more complex features like remote databas
 * Copy publication to clipboard (PREMIUM)
 * Full-text search (PREMIUM)
 * Multiple advanced search options (PREMIUM)
+* Interactive Search Builder (PREMIUM)
+* Search Panes (PREMIUM)
+* Custom queries (PREMIUM)
+* Custom post types (PREMIUM)
 
 ### Charts
 > Create charts from SQL queries (Query Builder integration)
@@ -54,6 +58,7 @@ For advanced users, the plugin support more complex features like remote databas
 * Work on multiple SQL queries simultaneously (using tabs)
 * Save and reuse queries
 * Protects WordPress table structures and data
+* Interactive Visual Query Builder (PREMIUM)
 
 ### Data Projects
 > Write your own WordPress apps

@@ -161,13 +161,20 @@ namespace WPDataAccess\API {
 						} else {
 							$sqlorder .= ',';
 						}
-						$sqlorder .= $_orderby[ $i ];
 						if ( isset( $_order[ $i ] ) ) {
-							$sqlorder .= " {$_order[ $i ]}";
+							$sqlorder .= sanitize_sql_orderby( "{$_orderby[ $i ]} {$_order[ $i ]}" );
+						} else {
+							$sqlorder .= sanitize_sql_orderby( $_orderby[ $i ] );
 						}
 					}
 				}
+				if ( ! is_numeric( $per_page ) ) {
+					$per_page = 10;
+				}
 				$offset = ( $page - 1 ) * $per_page; // Calculate offset.
+				if ( ! is_numeric( $offset ) ) {
+					$offset = 0;
+				}
 				// Query.
 				$rows = $wpdadb->get_results(
 					"select * from `{$table_name}` {$where} {$sqlorder} limit {$per_page} offset {$offset}",
@@ -179,7 +186,7 @@ namespace WPDataAccess\API {
 				}
 				// Count rows.
 				$countrows = $wpdadb->get_results(
-					"select count(1) as rowcount from {$table_name}",
+					"select count(1) as rowcount from `{$table_name}`",
 					'ARRAY_A'
 				);
 				if ( $wpdadb->last_error ) {

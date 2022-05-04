@@ -205,7 +205,7 @@ namespace WPDataAccess\Data_Dictionary {
 						);
 						$columns = $wpdadb->get_results( $query, 'ARRAY_A' );
 
-						$schema_name = str_replace( '`', '', $schema_name );
+						$schema_name = $wpdadb->dbname;
 						$table_name  = str_replace( '`', '', $table_name );
 						$indexes_dbs = $wpdadb->get_results(
 							"show indexes from `{$schema_name}`.`{$table_name}`",
