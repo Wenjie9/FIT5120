@@ -134,7 +134,9 @@ namespace WPDataAccess\Utilities {
 
 				if ( isset( $_FILES['filename'] ) ) {
 
-					$temp_file_name = sanitize_text_field( wp_unslash( $_FILES['filename']['tmp_name'] ) );
+					// phpcs:disable
+					$temp_file_name = sanitize_text_field( $_FILES['filename']['tmp_name'] ); // For Windows: do NOT unslash!
+					// phpcs:enable
 					$temp_file_type = sanitize_text_field( wp_unslash( $_FILES['filename']['type'] ) );
 					$orig_file_name = sanitize_text_field( wp_unslash( $_FILES['filename']['name'] ) );
 

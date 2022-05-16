@@ -9,6 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
+
+<?php
+header("HTTP/1.1 301 Moved Permanently");
+header("Location: ".get_bloginfo('url'));
+exit();
+?>
+
 <main id="content" class="site-main" role="main">
 	<?php if ( apply_filters( 'hello_elementor_page_title', true ) ) : ?>
 		<header class="page-header">

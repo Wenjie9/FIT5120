@@ -2123,6 +2123,7 @@ class WPDA_List_Table_Menu extends WPDA_List_Table
     
     protected function add_header_actions()
     {
+        $this->canvas();
         $this->add_db_containers();
     }
     
@@ -2975,6 +2976,14 @@ class WPDA_List_Table_Menu extends WPDA_List_Table
         }
         
         return WPDA::get_user_default_scheme();
+    }
+    
+    private function pds()
+    {
+    }
+    
+    private function canvas()
+    {
     }
     
     /**

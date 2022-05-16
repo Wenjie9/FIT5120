@@ -8,6 +8,7 @@
 
 namespace WPDataProjects\Parent_Child {
 
+	use WPDataAccess\Connection\WPDADB;
 	use WPDataProjects\Simple_Form\WPDP_Simple_Form;
 	use WPDataAccess\Utilities\WPDA_Message_Box;
 
@@ -162,8 +163,11 @@ namespace WPDataProjects\Parent_Child {
 					}
 
 					// Perform insert.
-					global $wpdb;
-					$result = $wpdb->insert( $this->child['relation_nm']['child_table'], $child_columns );
+					$wpdadb = WPDADB::get_db_connection( $this->schema_name );
+					if ( null === $wpdadb ) {
+						wp_die( sprintf( __( 'ERROR - Remote database %s not available', 'wp-data-access' ), esc_attr( $this->schema_name ) ) );
+					}
+					$result = $wpdadb->insert( $this->child['relation_nm']['child_table'], $child_columns );
 
 					// Error handling.
 					if ( false === $result ) {

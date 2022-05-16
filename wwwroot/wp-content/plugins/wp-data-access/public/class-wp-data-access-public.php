@@ -96,7 +96,8 @@ class WP_Data_Access_Public
             'wpda_material_icons',
             'https://fonts.googleapis.com/icon?family=Material+Icons',
             array(),
-            null
+            null,
+            false
         );
         wp_register_style(
             'wpda_datatables_default',
@@ -124,14 +125,16 @@ class WP_Data_Access_Public
             'wpda_fontawesome_icons',
             WPDA::CDN_FONTAWESOME . 'fontawesome.min.css',
             array(),
-            null
+            null,
+            false
         );
         wp_register_style(
             // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
             'wpda_fontawesome_icons_solid',
             WPDA::CDN_FONTAWESOME . 'solid.min.css',
             array(),
-            null
+            null,
+            false
         );
     }
     

@@ -254,6 +254,17 @@ div.wpda-dailog-layout label {
     width: 100px;
 }
 
+div.wpda-dailog-layout fieldset > div > textarea {
+    width: 100%;
+    height: 120px;
+}
+
+div.wpda-dailog-layout fieldset > legend > span {
+    text-decoration: none;
+    outline: 0;
+    cursor: pointer;
+}
+
 div.ui-dialog div.ui-dialog-content {
     padding: 1px;
 }

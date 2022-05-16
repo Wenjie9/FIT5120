@@ -190,15 +190,6 @@ table.dataTable.wpda-datatable.dtr-inline.collapsed > tbody > tr[role="row"] > t
     margin-top: 2px;
 }
 
-table.dataTable.wpda-datatable:not(.compact) thead tr th,
-table.dataTable.wpda-datatable:not(.compact) thead tr td,
-table.dataTable.wpda-datatable:not(.compact) tbody tr th,
-table.dataTable.wpda-datatable:not(.compact) tbody tr td,
-table.dataTable.wpda-datatable:not(.compact) tfoot tr th,
-table.dataTable.wpda-datatable:not(.compact) tfoot tr td {
-    padding: 8px 10px;
-}
-
 table.dataTable.wpda-datatable tbody tr td.child table.wpda-child-expanded>tr>td {
     padding: 0;
 }
@@ -211,6 +202,7 @@ table.dataTable.wpda-datatable td.wpda_format_number,
 table.dataTable.wpda-datatable th.wpda_format_date,
 table.dataTable.wpda-datatable td.wpda_format_date {
     white-space: nowrap;
+    overflow: hidden;
 }
 
 button.dt-button>span>i.fas {
@@ -233,4 +225,29 @@ div.dataTables_wrapper div.wpda-buttons {
 div.dtsp-topRow div.dtsp-subRow1 button.dtsp-searchIcon {
     border: none !important;
     background-color: transparent !important;
+}
+
+table.dataTable.wpda-datatable input[type="search"] {
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: transparent;
+    margin-left: 3px;
+    font-size: inherit;
+}
+
+div.dataTables_info,
+div.dataTables_paginate {
+    font-size: inherit;
+}
+
+div.dataTables_wrapper .dataTables_length select,
+div.dataTables_wrapper .dataTables_filter input[type="search"] {
+    font-size: inherit;
+    min-width: 60px;
+}
+
+div.wpda_publication_container input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
 }

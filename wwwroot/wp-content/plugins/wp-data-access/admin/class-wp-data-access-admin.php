@@ -273,7 +273,8 @@ class WP_Data_Access_Admin
             'wpda_material_icons',
             'https://fonts.googleapis.com/icon?family=Material+Icons',
             array(),
-            null
+            null,
+            false
         );
         // Load fontawesome icons.
         wp_enqueue_style(
@@ -281,22 +282,26 @@ class WP_Data_Access_Admin
             'wpda_fontawesome_icons',
             WPDA::CDN_FONTAWESOME . 'fontawesome.min.css',
             array(),
-            null
+            null,
+            false
         );
         wp_enqueue_style(
             // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
             'wpda_fontawesome_icons_solid',
             WPDA::CDN_FONTAWESOME . 'solid.min.css',
             array(),
-            null
+            null,
+            false
         );
         wp_enqueue_style(
             // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
             'wpda_fontawesome_icons_regular',
             WPDA::CDN_FONTAWESOME . 'regular.min.css',
             array(),
-            null
+            null,
+            false
         );
+        
         if ( self::PAGE_PUBLISHER === $this->page ) {
             wp_register_style(
                 'wpda_datatables_default',
@@ -304,7 +309,16 @@ class WP_Data_Access_Admin
                 array(),
                 WPDA::get_option( WPDA::OPTION_WPDA_VERSION )
             );
+            // Add jQuery multiselect resources.
+            wp_enqueue_style(
+                'wpda_jquery_multiselect',
+                plugins_url( '../assets/css/jquery.multiselect.sortable.js.css', __FILE__ ),
+                array(),
+                WPDA::get_option( WPDA::OPTION_WPDA_VERSION ),
+                false
+            );
         }
+        
         
         if ( self::PAGE_QUERY_BUILDER === $this->page ) {
             // Add Query Builder resources.
@@ -477,7 +491,15 @@ class WP_Data_Access_Admin
                     wp_localize_script( 'wp-theme-plugin-editor', 'cm_settings', $cm_settings );
                     wp_enqueue_script( 'wp-theme-plugin-editor' );
                 }
-            
+                
+                // Add jQuery multiselect resources.
+                wp_enqueue_script(
+                    'wpda_jquery_multiselect',
+                    plugins_url( '../assets/js/jquery.multiselect.sortable.js', __FILE__ ),
+                    array(),
+                    WPDA::get_option( WPDA::OPTION_WPDA_VERSION ),
+                    false
+                );
             }
         
         }
@@ -555,7 +577,7 @@ class WP_Data_Access_Admin
             'wpda_google_charts',
             WPDA::GOOGLE_CHARTS,
             array(),
-            WPDA::get_option( WPDA::OPTION_WPDA_VERSION ),
+            null,
             false
         );
         wp_enqueue_script(

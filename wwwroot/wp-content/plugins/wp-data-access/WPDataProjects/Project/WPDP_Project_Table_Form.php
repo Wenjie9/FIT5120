@@ -337,7 +337,6 @@ class WPDP_Project_Table_Form
      */
     public function get_unique_setname()
     {
-        var_dump( 'test' );
         $this->wpda_table_setname = 'default';
         // Default for first options set
         global  $wpdb ;

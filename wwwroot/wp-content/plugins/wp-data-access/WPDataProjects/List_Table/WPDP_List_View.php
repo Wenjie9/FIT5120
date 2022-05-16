@@ -141,15 +141,6 @@ namespace WPDataProjects\List_Table {
 			$this->mode     = $this->project->get_mode();
 			$this->setname  = null === $this->project->get_setname() ? 'default' : $this->project->get_setname();
 
-			global $wpda_project_mode;
-			$wpda_project_mode = array(
-				'project_id'             => $this->project_id,
-				'page_id'                => $this->page_id,
-				'setname'                => $this->setname,
-				'mode'                   => $this->mode,
-				'page_allow_full_export' => $this->project->get_page_allow_full_export(),
-			);
-
 			if ( null !== $this->title && '' !== $this->title ) {
 				$args['title'] = $this->title;
 			}
@@ -188,6 +179,16 @@ namespace WPDataProjects\List_Table {
 			if ( isset( $args['bulk_actions_enabled'] ) ) {
 				$this->bulk_actions_enabled = $args['bulk_actions_enabled'];
 			}
+
+			global $wpda_project_mode;
+			$wpda_project_mode = array(
+				'project_id'             => $this->project_id,
+				'page_id'                => $this->page_id,
+				'setname'                => $this->setname,
+				'mode'                   => $this->mode,
+				'page_allow_full_export' => $this->project->get_page_allow_full_export(),
+				'allow_insert'           => $this->allow_insert,
+			);
 		}
 
 		/**

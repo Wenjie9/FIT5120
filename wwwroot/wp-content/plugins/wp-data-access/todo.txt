@@ -1,15 +1,16 @@
 *** MAIN SCHEDULE 2022 ***
 
-+ Finish Data Forms V2
 + Finish premium data services
+  + Add nonce to pds config page
+  + Make password field on remote database page type=password
++ Finish Data Forms V2
 
 *** ISSUES ***
 
++ I have a map with multiple markers(for shops location). As the api center is based on the intial location set by the user, I want  the map to move to another marker when I click on the data table and center the map on that marker. (Jonathan)
 + Add filter to LOV (allowing to use WordPressenvironment variables) - Marco
 + Dashboards
   + Start cache update after sending response
-+ Iek
-  + Add custom chart options
 + Charles
   + Allow to override search features for publications:
     + Wildcard versus normal search
@@ -76,6 +77,7 @@
   > /home/customer/www/leecountyhgs.org/public_html/wp-includes/wp-db.php
   > on line 2720
 + Allow to export all rows from a Data Projects page (Manivannan )
++ Support Classic Press? (Pauhana)
 
 *** WORK IN PROGRESS ***
 

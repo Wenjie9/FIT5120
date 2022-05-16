@@ -139,6 +139,8 @@ class WPDA_Data_Tables
             $table_name = $publication[0]['pub_table_name'];
             $column_names = $publication[0]['pub_column_names'];
             $pub_query = $publication[0]['pub_query'];
+            $pub_cpt_query = $publication[0]['pub_cpt_query'];
+            $pub_cpt_format = $publication[0]['pub_cpt_format'];
             $responsive = strtolower( $publication[0]['pub_responsive'] );
             $responsive_popup_title = $publication[0]['pub_responsive_popup_title'];
             $responsive_cols = $publication[0]['pub_responsive_cols'];
@@ -146,6 +148,9 @@ class WPDA_Data_Tables
             $responsive_icon = strtolower( $publication[0]['pub_responsive_icon'] );
             $pub_format = $publication[0]['pub_format'];
             $sql_orderby = $publication[0]['pub_default_orderby'];
+            if ( null === $sql_orderby || 'null' === $sql_orderby ) {
+                $sql_orderby = '';
+            }
             $pub_table_options_searching = $publication[0]['pub_table_options_searching'];
             $pub_table_options_ordering = $publication[0]['pub_table_options_ordering'];
             $pub_table_options_paging = $publication[0]['pub_table_options_paging'];
@@ -165,6 +170,8 @@ class WPDA_Data_Tables
             $pub_id = '0';
             $data_source = 'Table';
             $pub_query = null;
+            $pub_cpt_query = null;
+            $pub_cpt_format = '';
             $responsive_popup_title = '';
             $pub_format = '';
             $pub_table_options_searching = 'on';
@@ -248,7 +255,7 @@ class WPDA_Data_Tables
         }
         
         
-        if ( 'Query' === $data_source ) {
+        if ( 'Query' === $data_source || 'CPT' === $data_source ) {
         } else {
             // Check if table exists to prevent SQL injection
             $this->wpda_dictionary_checks = new WPDA_Dictionary_Exist( $database, $table_name );
@@ -284,22 +291,22 @@ class WPDA_Data_Tables
             $this->column_labels = $this->get_labels( $pub_format );
             // Define publication columns
             $wpda_database_columns = $this->define_columns( $use_buttons_extension, $hyperlinks, $geolocation );
-            // Run filters to allow plugin users to add custom features
-            
-            if ( has_filter( 'wpda_wpdataaccess_prepare' ) ) {
-                $wpda_wpdataaccess_prepare_filter = apply_filters(
-                    'wpda_wpdataaccess_prepare',
-                    '',
-                    $database,
-                    $table_name,
-                    $pub_id,
-                    $this->columns,
-                    $this->table_settings
-                );
-            } else {
-                $wpda_wpdataaccess_prepare_filter = '';
-            }
+        }
         
+        // Run filters to allow plugin users to add custom features
+        
+        if ( has_filter( 'wpda_wpdataaccess_prepare' ) ) {
+            $wpda_wpdataaccess_prepare_filter = apply_filters(
+                'wpda_wpdataaccess_prepare',
+                '',
+                $database,
+                $table_name,
+                $pub_id,
+                $this->columns,
+                $this->table_settings
+            );
+        } else {
+            $wpda_wpdataaccess_prepare_filter = '';
         }
         
         // Get jQuery DataTables language
@@ -341,7 +348,7 @@ class WPDA_Data_Tables
         $json_value = $this->prepare_json();
         // Generate nonce
         $wpnonce = $this->generate_nonce( $table_name, $column_names_value, $is_embedded );
-        return $wpda_wpdataaccess_prepare_filter . $styling_template . "<div class=''><table id=\"" . esc_attr( $table_name ) . "{$pub_id}\" class=\"{$dataTablesClass}\" cellspacing=\"0\">" . '<thead>' . $this->show_header(
+        return $wpda_wpdataaccess_prepare_filter . $styling_template . "<div class='wpda_publication_container'><table id=\"" . esc_attr( $table_name ) . "{$pub_id}\" class=\"{$dataTablesClass}\" cellspacing=\"0\">" . '<thead>' . $this->show_header(
             $responsive,
             $responsive_cols,
             $hyperlinks,
@@ -449,6 +456,7 @@ class WPDA_Data_Tables
             $wpda_database_columns_obj->name = $this->columns[$i];
             $wpda_database_columns_obj->targets = $i;
             $wpda_database_columns_obj->label = $column_label;
+            $wpda_database_columns_obj->searchBuilderType = WPDA::get_sb_type( $this->wpda_list_columns->get_column_data_type( $this->columns[$i] ) );
             $wpda_database_columns .= json_encode( $wpda_database_columns_obj );
             if ( $i < count( $this->columns ) - 1 ) {
                 $wpda_database_columns .= ',';
@@ -621,7 +629,6 @@ class WPDA_Data_Tables
         $_filter = array();
         $has_sp = false;
         $sp_columns = [];
-        $pub_query = null;
         $pub_id = ( isset( $_REQUEST['pubid'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['pubid'] ) ) : '' );
         // input var okay.
         $database = ( isset( $_REQUEST['wpdasrc'] ) ? str_replace( '`', '', sanitize_text_field( wp_unslash( $_REQUEST['wpdasrc'] ) ) ) : '' );
@@ -640,6 +647,7 @@ class WPDA_Data_Tables
             wp_die();
         }
         
+        $this->serverSide = true;
         
         if ( '' !== $pub_id && '0' != $pub_id ) {
             // Get publication data
@@ -682,6 +690,16 @@ class WPDA_Data_Tables
                     $where = $publication[0]['pub_default_where'];
                 }
             }
+            // Get server side options.
+            
+            if ( isset( $json->serverSide ) ) {
+                $this->serverSide = true === $json->serverSide || 'true' === $json->serverSide;
+            } else {
+                if ( 'on' !== $publication[0]['pub_table_options_serverside'] || null === $publication[0]['pub_table_options_serverside'] ) {
+                    $this->serverSide = false;
+                }
+            }
+        
         } else {
             // Check token = old shortcode usage
             
@@ -866,24 +884,6 @@ class WPDA_Data_Tables
                 $orderby_columns[] = "`{$column_name}` {$column_dir}";
             }
             $orderby = implode( ',', $orderby_columns );
-        } else {
-            // If ordering is disabled we still need to use the default order by (user cannot reorder)
-            
-            if ( isset( $publication[0]['pub_default_orderby'] ) && null !== $publication[0]['pub_default_orderby'] && '' !== trim( $publication[0]['pub_default_orderby'] ) ) {
-                $default_orderby = $publication[0]['pub_default_orderby'];
-                $default_orderby_arr = explode( '|', $default_orderby );
-                $orderby_columns = array();
-                foreach ( $default_orderby_arr as $order ) {
-                    $orderby_column_arr = explode( ',', $order );
-                    $orderby_column = '`' . str_replace( '`', '', $column_array[$orderby_column_arr[0]] ) . '`';
-                    if ( isset( $orderby_column_arr[1] ) ) {
-                        $orderby_column .= ' ' . $orderby_column_arr[1];
-                    }
-                    $orderby_columns[] = $orderby_column;
-                }
-                $orderby = implode( ',', $orderby_columns );
-            }
-        
         }
         
         // Add search criteria.
@@ -1236,9 +1236,16 @@ class WPDA_Data_Tables
             }
             array_push( $rows_final, $row );
         }
-        $row_count_estimate = WPDA::get_row_count_estimate( $database, $table_name, $table_settings );
-        $rows_estimate = $row_count_estimate['row_count'];
-        $do_real_count = $row_count_estimate['do_real_count'];
+        
+        if ( $this->serverSide ) {
+            $row_count_estimate = WPDA::get_row_count_estimate( $database, $table_name, $table_settings );
+            $rows_estimate = $row_count_estimate['row_count'];
+            $do_real_count = $row_count_estimate['do_real_count'];
+        } else {
+            $rows_estimate = count( $rows_final );
+            $do_real_count = false;
+        }
+        
         
         if ( 'more' === $publication_mode ) {
             // Use estimate row count
@@ -1283,8 +1290,8 @@ class WPDA_Data_Tables
         // Convert query result to jQuery DataTables object.
         $obj = (object) null;
         $obj->draw = ( isset( $_REQUEST['draw'] ) ? intval( $_REQUEST['draw'] ) : 0 );
-        $obj->recordsTotal = $count_table;
-        $obj->recordsFiltered = $count_table_filtered;
+        $obj->recordsTotal = intval( $count_table );
+        $obj->recordsFiltered = intval( $count_table_filtered );
         $obj->data = $rows_final;
         $obj->error = $wpdadb->last_error;
         if ( 'on' === WPDA::get_option( WPDA::OPTION_PLUGIN_DEBUG ) ) {
@@ -1295,10 +1302,10 @@ class WPDA_Data_Tables
                 'where'             => $where,
                 'orderby'           => $orderby,
                 'filter'            => $_filter,
-                'pub_query'         => $pub_query,
                 'advanced_settings' => $json,
                 'column_labels'     => $this->wpda_list_columns->get_table_column_headers(),
                 'labels'            => array_flip( $this->get_labels( json_encode( $pub_format ) ) ),
+                'serverSide'        => $this->serverSide,
             );
         }
         // Send header
@@ -1319,7 +1326,9 @@ class WPDA_Data_Tables
         $publication,
         $json,
         $has_sp,
-        $sp_columns
+        $sp_columns,
+        $sql_query,
+        $is_cpt
     )
     {
     }

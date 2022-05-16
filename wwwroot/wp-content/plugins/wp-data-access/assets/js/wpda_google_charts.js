@@ -416,6 +416,7 @@ function chartLayout(widgetId) {
 	var chartAreaHeight = CHARTAREA_DEFAULT_HEIGHT;
 	var chartAreaTop = CHARTAREA_DEFAULT_TOP;
 	var chartAreaLeft = CHARTAREA_DEFAULT_LEFT;
+	var chartAdvancedOptions = "";
 
 	if (dashboardWidgets[widgetId]!==undefined) {
 		if (dashboardWidgets[widgetId].widgetName!==undefined) {
@@ -462,6 +463,9 @@ function chartLayout(widgetId) {
 				chartAreaHeight = dashboardWidgets[widgetId].chartOptions.chartArea.height.replace("%","");
 				chartAreaTop = dashboardWidgets[widgetId].chartOptions.chartArea.top;
 				chartAreaLeft = dashboardWidgets[widgetId].chartOptions.chartArea.left;
+			}
+			if (dashboardWidgets[widgetId].chartOptions.advancedOptions!==undefined) {
+				chartAdvancedOptions = dashboardWidgets[widgetId].chartOptions.advancedOptions;
 			}
 		}
 	} else {
@@ -531,9 +535,12 @@ function chartLayout(widgetId) {
 			<br/>
 			<fieldset class="wpda_fieldset">
 				<legend>
-					Widget size
+					<span onclick="toggleOption(jQuery(this))">
+						<i class="wpda-fieldset-expand material-icons">add_circle</i>
+						Widget size
+					</span>
 				</legend>
-				<div>
+				<div style="display: none">
 					<label htmlFor="wpda_chart_width_${widgetId}">
 						Width
 					</label>
@@ -548,12 +555,12 @@ function chartLayout(widgetId) {
 						   readOnly
 					/>
 				</div>
-				<div>
+				<div style="display: none">
 					<label></label>
 					<input type="radio" value="val" name="wpda_chart_width_select_${widgetId}" ${customWidth} />
 					<input type="number" id="wpda_chart_width_${widgetId}" value="${chartWidthPx}"/> px
 				</div>
-				<div>
+				<div style="display: none">
 					<label htmlFor="wpda_chart_height_${widgetId}">
 						Height
 					</label>
@@ -568,7 +575,7 @@ function chartLayout(widgetId) {
 						   readOnly
 					/>
 				</div>
-				<div>
+				<div style="display: none">
 					<label></label>
 					<input type="radio" value="val" name="wpda_chart_height_select_${widgetId}" ${customHeight} />
 					<input type="number" id="wpda_chart_height_${widgetId}" value="${chartHeightPx}"/> px
@@ -577,31 +584,68 @@ function chartLayout(widgetId) {
 			<br/>
 			<fieldset class="wpda_fieldset">
 				<legend>
-					<input type="checkbox" id="wpda_chartarea_${widgetId}" ${chartArea} /> Chart area (uncheck to use defaults)
+					<span onclick="toggleOption(jQuery(this))">
+						<i class="wpda-fieldset-expand material-icons">add_circle</i>
+						Widget size
+					</span>
 				</legend>
-				<div>
+				<div style="display: none">
+					<label></label>
+					<input type="checkbox" id="wpda_chartarea_${widgetId}" ${chartArea} /> Chart area (uncheck to use defaults)
+				</div>
+				<div style="display: none" style="height: 10px">
+				</div>
+				<div style="display: none">
 					<label for="wpda_chartarea_width_${widgetId}">
 						Width
 					</label>
 					<input id="wpda_chartarea_width_${widgetId}" type="number" min="0" max="100" value="${chartAreaWidth}" /> %
 				</div>
-				<div>
+				<div style="display: none">
 					<label for="wpda_chartarea_height_${widgetId}">
 						Height
 					</label>
 					<input id="wpda_chartarea_height_${widgetId}" type="number" min="0" max="100" value="${chartAreaHeight}" /> %
 				</div>
-				<div>
+				<div style="display: none">
 					<label for="wpda_chartarea_top_${widgetId}">
 						Top
 					</label>
 					<input id="wpda_chartarea_top_${widgetId}" type="number" min="0" max="100" value="${chartAreaTop}" /> px
 				</div>
-				<div>
+				<div style="display: none">
 					<label for="wpda_chartarea_left_${widgetId}">
 						Left
 					</label>
 					<input id="wpda_chartarea_left_${widgetId}" type="number" min="0" max="100" value="${chartAreaLeft}" /> px
+				</div>
+			</fieldset>
+			<br/>
+			<fieldset class="wpda_fieldset">
+				<legend>
+					<span onclick="toggleOption(jQuery(this))">
+						<i class="wpda-fieldset-expand material-icons">add_circle</i>
+						Advanced chart options
+					</span>
+				</legend>
+				<div style="display: none">
+					<div style="display: none">
+						<span style="display: inline-flex; flex-direction: row; justify-content: space-between; width: 100%; align-items: center;">
+							<span>
+								Must be valid JSON
+							</span>
+							<span style="float: right">
+								<button type="button" class="ui-button" onclick="checkAdvancedOptions('${widgetId}')">Check JSON validity</button>
+							</span>
+						</span>
+					</div>
+					<textarea id="wpda_chart_advanced_options_${widgetId}">${chartAdvancedOptions}</textarea>
+					<div style="display: none">
+						Add chart options in JSON format
+						<a href="https://wpdataaccess.com/docs/documentation/dashboards-and-widgets/chart-widgets/#advanced-chart-options" target="_blank">
+							(read more...)
+						</a>
+					</div>
 				</div>
 			</fieldset>
         </div> 
@@ -630,6 +674,30 @@ function chartLayout(widgetId) {
 	jQuery('#wpda_chart_legend_' + widgetId + ' option[value="' + chartLegend + '"]').prop("selected", true);
 }
 
+function checkAdvancedOptions(widgetId) {
+	let advancedOptions = jQuery("#wpda_chart_advanced_options_" + widgetId).val();
+	try {
+		JSON.parse(advancedOptions.replace(/ {4}|[\t\n\r]/gm,''));
+		alert("This looks like valid JSON!\nChart options are not checked.");
+	} catch (e) {
+		if (advancedOptions.trim()!=="") {
+			console.log("WP Data Access ERROR:");
+			console.log(e);
+			alert(e);
+		}
+	}
+}
+
+function toggleOption(elem) {
+	if (elem.find("i").html()==="add_circle") {
+		elem.find("i").html("remove_circle");
+	} else {
+		elem.find("i").html("add_circle");
+	}
+
+	elem.closest("fieldset").find("div").toggle();
+}
+
 function saveOptions(widgetId) {
 	var options = {};
 
@@ -655,12 +723,19 @@ function saveOptions(widgetId) {
 		options.chartArea.left = jQuery("#wpda_chartarea_left_" + widgetId).val();
 	}
 
-	// TODO Add custom options...
-	// options.is3D = true;
-	// options.vAxes = {
-	// 	0: {baseline: 0}
-	// };
-	// console.log(options);
+	options.advancedOptions = jQuery("#wpda_chart_advanced_options_" + widgetId).val();
+	if (options.advancedOptions.trim()!=="") {
+		try {
+			options = Object.assign(
+				options,
+				JSON.parse(options.advancedOptions.replace(/ {4}|[\t\n\r]/gm,''))
+			);
+		} catch (e) {
+			console.log("WP Data Access ERROR:");
+			console.log(e);
+			alert(e);
+		}
+	}
 
 	options.showRowNumber = jQuery("#wpda_chart_lineno_yes_" + widgetId).is(":checked");
 

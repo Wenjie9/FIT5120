@@ -330,7 +330,7 @@ namespace WPDataAccess\Backup {
 								value: event.target.text,
 								text: event.target.text
 							}));
-							jQuery("#wpda_table_name_db option[value=" + event.target.text + "]").remove();
+							jQuery("#wpda_table_name_db option[value='" + event.target.text + "']").remove();
 						}
 					});
 					jQuery('#wpda_table_name_export').on('click', function (event) {
@@ -339,7 +339,7 @@ namespace WPDataAccess\Backup {
 								value: event.target.text,
 								text: event.target.text
 							}));
-							jQuery("#wpda_table_name_export option[value=" + event.target.text + "]").remove();
+							jQuery("#wpda_table_name_export option[value='" + event.target.text + "']").remove();
 						}
 					});
 				});

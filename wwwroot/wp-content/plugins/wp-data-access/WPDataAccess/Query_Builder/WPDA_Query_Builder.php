@@ -292,7 +292,7 @@ class WPDA_Query_Builder
             // input var okay.
             $wpda_schemaname = sanitize_text_field( wp_unslash( $_POST['wpda_schemaname'] ) );
             // input var okay.
-            $wpda_sqlquery = sanitize_textarea_field( wp_unslash( $_POST['wpda_sqlquery'] ) );
+            $wpda_sqlquery = wp_unslash( $_POST['wpda_sqlquery'] );
             // input var okay.
             $wpda_sqllimit = sanitize_text_field( wp_unslash( $_POST['wpda_sqllimit'] ) );
             // input var okay.

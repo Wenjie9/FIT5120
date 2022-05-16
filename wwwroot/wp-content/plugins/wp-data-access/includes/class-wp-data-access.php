@@ -253,6 +253,7 @@ class WP_Data_Access
             10,
             1
         );
+        // Data Publisher services.
         $this->loader->add_action( 'wp_ajax_wpda_test_publication', \WPDataAccess\Data_Publisher\WPDA_Publisher_Form::class, 'test_publication' );
         // Add custom CSS to freemius pages.
         add_action(
@@ -393,6 +394,10 @@ class WP_Data_Access
             case 'frontend':
                 $wpda_settings_class_name = 'WPDA_Settings_FrontEnd';
                 $help_url = 'https://wpdataaccess.com/docs/documentation/plugin-settings/front-end/';
+                break;
+            case 'pds':
+                $wpda_settings_class_name = 'WPDA_Settings_PDS';
+                $help_url = 'https://wpdataaccess.com/docs/documentation/plugin-settings/premium-data-services/';
                 break;
             case 'dashboard':
                 $wpda_settings_class_name = 'WPDA_Settings_Dashboard';

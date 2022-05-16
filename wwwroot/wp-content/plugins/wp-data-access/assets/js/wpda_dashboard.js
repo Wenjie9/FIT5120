@@ -418,11 +418,11 @@ function openPanel() {
 
 function resetColumnSelection() {
     for (var i=1; i<=4; i++) {
-        jQuery("#wpda-open-panel-column option[value=" + i + "]").removeAttr("disabled");
+        jQuery("#wpda-open-panel-column option[value='" + i + "']").removeAttr("disabled");
     }
 
     for (var i=jQuery(".wpda-dashboard-column").length+1; i<=4; i++) {
-        jQuery("#wpda-open-panel-column option[value=" + i + "]").attr("disabled", true);
+        jQuery("#wpda-open-panel-column option[value='" + i + "']").attr("disabled", true);
     }
 }
 

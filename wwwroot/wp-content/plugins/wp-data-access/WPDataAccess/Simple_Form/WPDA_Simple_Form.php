@@ -480,6 +480,10 @@ class WPDA_Simple_Form
         if ( isset( $args['hide_add_new'] ) ) {
             $this->hide_add_new = $args['hide_add_new'];
         }
+        global  $wpda_project_mode ;
+        if ( isset( $wpda_project_mode['allow_insert'] ) && 'only' === $wpda_project_mode['allow_insert'] ) {
+            $this->hide_add_new = true;
+        }
     }
     
     /**
