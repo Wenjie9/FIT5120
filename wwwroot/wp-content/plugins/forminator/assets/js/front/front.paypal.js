@@ -106,7 +106,7 @@
 					}
 
 					// Listen for form field changes
-					$form.find('input, select, textarea').change( function() {
+					$form.find('input, select, textarea').on( 'change', function() {
 						if ( self.is_data_valid() && self.is_form_valid() ) {
 							actions.enable();
 						} else {

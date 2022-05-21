@@ -368,9 +368,14 @@ class Forminator_Core {
 	public static function sanitize_array( $data, $current_key = '' ) {
 		$data = wp_unslash( $data );
 		$skipped_keys = array( 'preview_data' );
-		if ( in_array( $current_key, $skipped_keys, true ) ) {
+		// TODO: Should skip fields that has its own sanitize function
+		if (
+			in_array( $current_key, $skipped_keys, true ) ||
+			0 === strpos( $current_key, 'url-' )
+		) {
 			return $data;
 		}
+
 		$allow_html = array(
 			'variations',
 			'question_description',

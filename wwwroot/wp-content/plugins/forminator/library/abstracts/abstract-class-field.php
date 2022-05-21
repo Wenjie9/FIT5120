@@ -980,98 +980,103 @@ abstract class Forminator_Field {
 	 * @return bool
 	 */
 	public static function is_condition_fulfilled( $form_field_value, $condition, $form_id = null ) {
+		if ( is_array( $form_field_value ) ) {
+			$form_field_value = forminator_trim_array( $form_field_value );
+		} else {
+			$form_field_value = wp_unslash( trim( $form_field_value ) );
+		}
 
-		$form_field_value = wp_unslash( $form_field_value );
+		$condition_value  = trim( $condition['value'] );
 
 		switch ( $condition['rule'] ) {
 			case 'is':
 				if ( is_array( $form_field_value ) ) {
 					// possible input is "1" to be compared with 1
-					return in_array( $condition['value'], $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+					return in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				}
-				if ( is_numeric( $condition['value'] ) ) {
-					return ( (int) $form_field_value === (int) $condition['value'] );
+				if ( is_numeric( $condition_value ) ) {
+					return ( (int) $form_field_value === (int) $condition_value );
 				}
 
-				return ( $form_field_value === $condition['value'] );
+				return ( $form_field_value === $condition_value );
 			case 'is_not':
 				if ( is_array( $form_field_value ) ) {
 					// possible input is "1" to be compared with 1
-					return ! in_array( $condition['value'], $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+					return ! in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				}
 
-				return ( $form_field_value !== $condition['value'] );
+				return ( $form_field_value !== $condition_value );
 			case 'is_great':
-				if ( ! is_numeric( $condition['value'] ) ) {
+				if ( ! is_numeric( $condition_value ) ) {
 					return false;
 				}
 				if ( ! is_numeric( $form_field_value ) ) {
 					return false;
 				}
 
-				return $form_field_value > $condition['value'];
+				return $form_field_value > $condition_value;
 			case 'is_less':
-				if ( ! is_numeric( $condition['value'] ) ) {
+				if ( ! is_numeric( $condition_value ) ) {
 					return false;
 				}
 				if ( ! is_numeric( $form_field_value ) ) {
 					return false;
 				}
 
-				return $form_field_value < $condition['value'];
+				return $form_field_value < $condition_value;
 			case 'contains':
-				return ( stripos( $form_field_value, $condition['value'] ) === false ? false : true );
+				return ( stripos( $form_field_value, $condition_value ) === false ? false : true );
 			case 'starts':
-				return ( stripos( $form_field_value, $condition['value'] ) === 0 ? true : false );
+				return ( stripos( $form_field_value, $condition_value ) === 0 ? true : false );
 			case 'ends':
-				return ( substr( $form_field_value, - strlen( $condition['value'] ) ) === $condition['value'] );
+				return ( substr( $form_field_value, - strlen( $condition_value ) ) === $condition_value );
 
 			case 'day_is':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$day = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'D' );
-					return $day === $condition['value'];
+					return $day === $condition_value;
 				}
 
 				return false;
 			case 'day_is_not':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$day = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'D' );
-					return $day !== $condition['value'];
+					return $day !== $condition_value;
 				}
 
                 return false;
 			case 'month_is':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$month = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'M' );
-					return $month === $condition['value'];
+					return $month === $condition_value;
 				}
 
                 return false;
 			case 'month_is_not':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$month = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'M' );
-					return $month !== $condition['value'];
+					return $month !== $condition_value;
 				}
 
                 return false;
 			case 'is_before':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$date = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'j F Y' );
-					return strtotime( $date ) < strtotime( $condition['value'] );
+					return strtotime( $date ) < strtotime( $condition_value );
 				}
 
                 return false;
 			case 'is_after':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$date = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'j F Y' );
-					return strtotime( $date ) > strtotime( $condition['value'] );
+					return strtotime( $date ) > strtotime( $condition_value );
 				}
 
                 return false;
 			case 'is_before_n_or_more_days':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$date = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'Y-m-d' );
-					return strtotime( $date ) <= strtotime( '-' . $condition['value'] . ' days' );
+					return strtotime( $date ) <= strtotime( '-' . $condition_value . ' days' );
 				}
 
 				return false;
@@ -1079,7 +1084,7 @@ abstract class Forminator_Field {
 			case 'is_before_less_than_n_days':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$date         = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'Y-m-d' );
-					$rule_date    = strtotime( '-' . $condition['value'] . ' days' );
+					$rule_date    = strtotime( '-' . $condition_value . ' days' );
 					$current_date = strtotime( 'today' );
 					return $rule_date < strtotime( $date ) && strtotime( $date ) <= $current_date;
 				}
@@ -1088,7 +1093,7 @@ abstract class Forminator_Field {
 			case 'is_after_n_or_more_days':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$date = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'Y-m-d' );
-					return strtotime( $date ) >= strtotime( '+' . $condition['value'] . ' days' );
+					return strtotime( $date ) >= strtotime( '+' . $condition_value . ' days' );
 				}
 
 				return false;
@@ -1096,7 +1101,7 @@ abstract class Forminator_Field {
 			case 'is_after_less_than_n_days':
 				if ( null !== $form_id && ! empty( $form_field_value ) ) {
 					$date         = self::get_day_or_month( $form_field_value, $condition['element_id'], $form_id, 'Y-m-d' );
-					$rule_date    = strtotime( '+' . $condition['value'] . ' days' );
+					$rule_date    = strtotime( '+' . $condition_value . ' days' );
 					$current_date = strtotime( 'today' );
 					return $rule_date > strtotime( $date ) && strtotime( $date ) >= $current_date;
 				}

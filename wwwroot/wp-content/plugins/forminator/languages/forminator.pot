@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Forminator package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Forminator 1.15.13\n"
+"Project-Id-Version: Forminator 1.15.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/forminator\n"
-"POT-Creation-Date: 2022-05-03 09:44:49+00:00\n"
+"POT-Creation-Date: 2022-05-11 08:59:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5934,22 +5934,29 @@ msgid ""
 "form(s)."
 msgstr ""
 
-#: admin/classes/class-admin.php:971
-msgid ""
-"<strong>Important Upgrade Notice:</strong> We've made some improvements to "
-"the way form submissions are handled with this update for better "
-"performance, and that can break <strong>only</strong> custom forms that may "
-"be using deprecated actions & filters. See <a href=\"%1$s\" "
-"target=\"_blank\">this chapter</a> in our Forminator API Docs for the "
-"complete list of those changes."
+#: admin/classes/class-admin.php:970
+msgid "Upgrade Notice: "
 msgstr ""
 
-#: admin/classes/class-admin.php:974
+#: admin/classes/class-admin.php:971
 msgid ""
-"Also, please ensure you have a backup of your site before updating, and "
-"check to ensure your custom forms are working as expected afterwards. If "
-"you face any issue or have any questions or doubt, don't hesitate to get in "
-"touch with our support heroes."
+"Forminator is getting a huge performance boost thanks to some form "
+"submission improvements."
+msgstr ""
+
+#: admin/classes/class-admin.php:973
+msgid ""
+"There's an extremely low chance these changes may affect you if any of your "
+"forms use a custom action or filter that we've now removed or modified "
+"(forms using standard Forminator features won't be affected at all). If "
+"needed, refer to this list of the %1$sretired actions/filters%2$s, but "
+"we're confident that %3$s of users should remain unaffected."
+msgstr ""
+
+#: admin/classes/class-admin.php:978
+msgid ""
+"Any problems or issues? Don't hesitate to create a support ticket or "
+"contact support directly."
 msgstr ""
 
 #: admin/classes/thirdparty-importers/class-importer-cf7.php:94
@@ -15481,8 +15488,8 @@ msgstr ""
 
 #: library/fields/captcha.php:79
 msgid ""
-"This site is protected by hCaptcha and its %1$s Privacy Policy %3$s and "
-"%2$s Terms of Service %3$s apply."
+"This site is protected by hCaptcha and its %1$sPrivacy Policy%3$s and "
+"%2$sTerms of Service%3$s apply."
 msgstr ""
 
 #: library/fields/captcha.php:87

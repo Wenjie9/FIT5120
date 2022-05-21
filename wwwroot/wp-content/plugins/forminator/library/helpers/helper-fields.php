@@ -2411,3 +2411,25 @@ function forminator_count_field_type_in_page( $field_type ) {
 
 	return $field_count;
 }
+
+/**
+ * Trim field values
+ *
+ * @since 1.15.15
+ *
+ * @param $value
+ *
+ * @return array
+ */
+function forminator_trim_array ( $value ) {
+
+	foreach( $value as $key => $val ) {
+		if ( is_array( $val ) ) {
+			$value[$key] = forminator_trim_array( $val );
+		} else {
+			$value[$key] = wp_unslash( trim( $val ) );
+		}
+	}
+
+	return $value;
+}

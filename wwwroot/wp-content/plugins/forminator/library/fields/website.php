@@ -321,7 +321,7 @@ class Forminator_Website extends Forminator_Field {
 	public function sanitize( $field, $data ) {
 		$original_data = $data;
 		// Sanitize.
-		$data = forminator_sanitize_field( $data );
+		$data = esc_url_raw( $data );
 
 		return apply_filters( 'forminator_field_website_sanitize', $data, $field, $original_data );
 	}

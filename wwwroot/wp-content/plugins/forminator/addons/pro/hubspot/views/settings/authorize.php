@@ -84,7 +84,7 @@ foreach ( $template_vars as $key => $val ) {
 			$('input[name="identifier"]').on( 'change', function (e) {
 				var parent = $(this).closest('.sui-box-body'),
 					val = $(this).val(),
-					link = $('.forminator-addon-connect', parent),
+					link = $( '.forminator-addon-connect', parent.next() ),
 					href = link.prop('href');
 				if ( href ) {
 					var index = href.indexOf('identifier');

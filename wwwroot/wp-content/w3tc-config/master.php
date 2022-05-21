@@ -393,7 +393,7 @@
     ],
     "minify.cache.files_regexp": false,
     "cdn.configuration_overloaded": false,
-    "cdn.enabled": false,
+    "cdn.enabled": true,
     "cdn.debug": false,
     "cdn.flush_manually": false,
     "cdn.engine": "stackpath2",

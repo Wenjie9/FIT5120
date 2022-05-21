@@ -184,7 +184,7 @@
 
 							$target_message.removeAttr("aria-hidden")
 								.prop("tabindex", "-1")
-								.removeClass('forminator-success forminator-error')
+								.removeClass('forminator-success forminator-error forminator-accessible')
 								.addClass('forminator-loading forminator-show');
 						}
 
@@ -465,7 +465,7 @@
 
 							$target_message.removeAttr("aria-hidden")
 								.prop("tabindex", "-1")
-								.removeClass('forminator-success forminator-error')
+								.removeClass('forminator-success forminator-error forminator-accessible')
 								.addClass('forminator-loading forminator-show');
 						}
 

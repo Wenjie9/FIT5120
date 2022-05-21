@@ -962,23 +962,27 @@ class Forminator_Admin {
 	public function show_plugin_update_notice( $data, $response ) {
 		$plugin_data = (object) $response;
 
-		if ( empty( $plugin_data->new_version ) || empty( $plugin_data->plugin ) ) {
+		if ( empty( $plugin_data->update ) || empty( $plugin_data->new_version ) || empty( $plugin_data->plugin ) ) {
 			return;
 		}
 
 		if ( '1.16.0' === $plugin_data->new_version || '1.16' === $plugin_data->new_version ) {
-			$notice = sprintf(
-				__( '<strong>Important Upgrade Notice:</strong> We\'ve made some improvements to the way form submissions are handled with this update for better performance, and that can break <strong>only</strong> custom forms that may be using deprecated actions & filters. See <a href="%1$s" target="_blank">this chapter</a> in our Forminator API Docs for the complete list of those changes.', 'forminator' ),
-				'https://wpmudev.com/docs/api-plugin-development/forminator-api-docs/#modified-or-deprecated-hooks'
-			);
-			$notice .= '<br/><br/>' . esc_html__( 'Also, please ensure you have a backup of your site before updating, and check to ensure your custom forms are working as expected afterwards. If you face any issue or have any questions or doubt, don\'t hesitate to get in touch with our support heroes.', 'forminator' );
+			$notice = '<br/><strong>' . __( 'Upgrade Notice: ', 'forminator' ) . '</strong>';
+			$notice .= __( 'Forminator is getting a huge performance boost thanks to some form submission improvements.', 'forminator' );
+			$notice .= '<br/><br/>' . sprintf(
+					__( 'There\'s an extremely low chance these changes may affect you if any of your forms use a custom action or filter that we\'ve now removed or modified (forms using standard Forminator features won\'t be affected at all). If needed, refer to this list of the %1$sretired actions/filters%2$s, but we\'re confident that %3$s of users should remain unaffected.', 'forminator' ),
+					'<a href="https://wpmudev.com/docs/api-plugin-development/forminator-api-docs/#modified-or-deprecated-hooks" target="_blank">',
+					'</a>',
+					'99%'
+				);
+			$notice .= '<br/><br/>' . esc_html__( 'Any problems or issues? Don\'t hesitate to create a support ticket or contact support directly.', 'forminator' );
 
 			echo "<script type='text/javascript'>
-           (function ($) {
-                   $(document).ready(function (e) {
-                       $( '.wp-list-table tr[data-plugin=\"" . esc_attr( $plugin_data->plugin ) . "\"] .notice-warning' ).append( '" . addslashes( $notice ) . "' ).css('padding-bottom', '10px');
-                   });
-               })(jQuery);
+            (function ($) {
+               $(document).ready(function (e) {
+                   $( '.wp-list-table tr[data-plugin=\"" . esc_attr( $plugin_data->plugin ) . "\"] .notice-warning' ).append( '" . addslashes( $notice ) . "' ).css('padding-bottom', '10px');
+               });
+            })(jQuery);
            </script>";
 		}
 	}
